@@ -1,0 +1,16 @@
+C:\Users\Master\Documents\esiea\javaPOO\pokemon\src\main\java\INF3132\App.java
+C:\Users\Master\Documents\esiea\javaPOO\pokemon\src\main\java\INF3132\attacks\Attack.java
+C:\Users\Master\Documents\esiea\javaPOO\pokemon\src\main\java\INF3132\attacks\exception\AttackFailedException.java
+C:\Users\Master\Documents\esiea\javaPOO\pokemon\src\main\java\INF3132\items\Item.java
+C:\Users\Master\Documents\esiea\javaPOO\pokemon\src\main\java\INF3132\monsters\Monster.java
+C:\Users\Master\Documents\esiea\javaPOO\pokemon\src\main\java\INF3132\monsters\MonsterType.java
+C:\Users\Master\Documents\esiea\javaPOO\pokemon\src\main\java\INF3132\monsters\Status.java
+C:\Users\Master\Documents\esiea\javaPOO\pokemon\src\main\java\INF3132\monsters\subclasses\ElectricMonster.java
+C:\Users\Master\Documents\esiea\javaPOO\pokemon\src\main\java\INF3132\monsters\subclasses\FireMonster.java
+C:\Users\Master\Documents\esiea\javaPOO\pokemon\src\main\java\INF3132\monsters\subclasses\GrassMonster.java
+C:\Users\Master\Documents\esiea\javaPOO\pokemon\src\main\java\INF3132\monsters\subclasses\GroundMonster.java
+C:\Users\Master\Documents\esiea\javaPOO\pokemon\src\main\java\INF3132\monsters\subclasses\InsectMonster.java
+C:\Users\Master\Documents\esiea\javaPOO\pokemon\src\main\java\INF3132\monsters\subclasses\WaterMonster.java
+C:\Users\Master\Documents\esiea\javaPOO\pokemon\src\main\java\INF3132\parser\BaseParser.java
+C:\Users\Master\Documents\esiea\javaPOO\pokemon\src\main\java\INF3132\parser\exception\InvalidMonsterTypeException.java
+C:\Users\Master\Documents\esiea\javaPOO\pokemon\src\main\java\INF3132\parser\MonsterParser.java

@@ -1,0 +1,17 @@
+INF3132\monsters\subclasses\InsectMonster.class
+INF3132\attacks\exception\AttackFailedException.class
+INF3132\monsters\subclasses\WaterMonster.class
+INF3132\monsters\Status.class
+INF3132\parser\MonsterParser$1.class
+INF3132\monsters\subclasses\GroundMonster.class
+INF3132\monsters\subclasses\GrassMonster.class
+INF3132\parser\MonsterParser.class
+INF3132\monsters\MonsterType.class
+INF3132\parser\exception\InvalidMonsterTypeException.class
+INF3132\monsters\subclasses\ElectricMonster.class
+INF3132\App.class
+INF3132\attacks\Attack.class
+INF3132\parser\BaseParser.class
+INF3132\items\Item.class
+INF3132\monsters\Monster.class
+INF3132\monsters\subclasses\FireMonster.class
