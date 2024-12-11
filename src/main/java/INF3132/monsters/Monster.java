@@ -10,14 +10,16 @@ import java.util.HashSet;
 
 public abstract class Monster {
     private String name;
+
     private int hp;
     private int maxHp;
     private int attack;
     private int defense;
     private int speed;
+
     private final List<Attack> attacks;
     private final Set<Status> status;
-    private MonsterType type;
+    private final MonsterType type;
 
     public Monster(
         String name,
