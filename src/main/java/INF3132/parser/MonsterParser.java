@@ -26,8 +26,19 @@ public class MonsterParser<T> extends BaseParser<T>{
         int defenseMax = Integer.parseInt(blockData.get("Defense").split(" ")[0]);
         int speedMin = Integer.parseInt(blockData.get("Speed").split(" ")[0]);
         int speedMax = Integer.parseInt(blockData.get("Speed").split(" ")[0]);
+        double effect1 = 0.0;
+        double effect2 = 0.0;
 
-        // @TODO En fonction du type, récupérer un ou deux champs Effect pour la capacité spéciale
+        // @TODO En fonction du type, récupérer un ou deux champs effect pour la capacité spéciale
+        String types = "Electric Water";
+        if(types.contains(type)){
+            if(type.equalsIgnoreCase("water")){
+                effect1 = Double.parseDouble(blockData.get("Flood"));
+                effect2 = Double.parseDouble(blockData.get("Fall"));
+            } else if (type.equalsIgnoreCase("electric")){
+                effect1 = Double.parseDouble(blockData.get("Paralysis"));
+            }
+        }
 
         // return new Monster(name, type, getStat(hpMin, hpMax), getStat(attackMin, attackMax), getStat(defenseMin, defenseMax), getStat(speedMin, speedMax), effect1, effect2)
         return t;
