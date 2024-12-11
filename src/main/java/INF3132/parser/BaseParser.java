@@ -44,13 +44,13 @@ public abstract class BaseParser<T> {
     public static MonsterType parseMonsterType(String monsterTypeString) throws InvalidMonsterTypeException {
         String comp = monsterTypeString.toLowerCase();
         switch (comp) {
-            case "electric":  return MonsterType.ELECTRIC;
-            case "fire":    return MonsterType.FIRE;
-            case "water":   return MonsterType.WATER;
-            case "grass":   return MonsterType.GRASS;
-            case "ground":  return MonsterType.GROUND;
-            case "insect":  return MonsterType.INSECT;
-            case "normal": return MonsterType.NORMAL;
+            case "electric":    return MonsterType.ELECTRIC;
+            case "fire":        return MonsterType.FIRE;
+            case "water":       return MonsterType.WATER;
+            case "grass":       return MonsterType.GRASS;
+            case "ground":      return MonsterType.GROUND;
+            case "insect":      return MonsterType.INSECT;
+            case "normal":      return MonsterType.NORMAL;
             default: throw new InvalidMonsterTypeException();
         }
     }
