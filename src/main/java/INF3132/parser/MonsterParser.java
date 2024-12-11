@@ -3,21 +3,26 @@ package INF3132.parser;
 import java.io.IOException;
 import java.util.Map;
 
+import INF3132.monsters.MonsterType;
+import INF3132.parser.exception.InvalidMonsterTypeException;
 
-// @TODO Remplacer les 'T' par la classe Monster
-
-public class MonsterParser<T> extends BaseParser<T>{
+public class MonsterParser<Monster> extends BaseParser<Monster>{
     
     public MonsterParser(String path) throws IOException {
         super(path);    
     }
 
     @Override
-    protected T parseBlock(Map<String, String> blockData){
-        T t; 
+    protected Monster parseBlock(Map<String, String> blockData){
+        Monster t; 
         t = null;
         String name = blockData.get("Name");
-        String type = blockData.get("Type"); // @TODO Remplacer String par Type
+        MonsterType type = MonsterType.NORMAL;
+        try {
+            type = BaseParser.parseMonsterType(blockData.get("Type"));
+        } catch (InvalidMonsterTypeException e) {
+            System.out.println("!!");
+        }
         int hpMin = Integer.parseInt(blockData.get("HP").split(" ")[0]);
         int hpMax = Integer.parseInt(blockData.get("HP").split(" ")[0]);
         int attackMin = Integer.parseInt(blockData.get("Attack").split(" ")[0]);
@@ -29,15 +34,15 @@ public class MonsterParser<T> extends BaseParser<T>{
         double effect1 = 0.0;
         double effect2 = 0.0;
 
-        // @TODO En fonction du type, récupérer un ou deux champs effect pour la capacité spéciale
-        String types = "Electric Water";
-        if(types.contains(type)){
-            if(type.equalsIgnoreCase("water")){
+        switch (type) {
+            case WATER:
                 effect1 = Double.parseDouble(blockData.get("Flood"));
                 effect2 = Double.parseDouble(blockData.get("Fall"));
-            } else if (type.equalsIgnoreCase("electric")){
+                break;
+            case ELECTRIC:
                 effect1 = Double.parseDouble(blockData.get("Paralysis"));
-            }
+                break;
+            default: break;
         }
 
         // return new Monster(name, type, getStat(hpMin, hpMax), getStat(attackMin, attackMax), getStat(defenseMin, defenseMax), getStat(speedMin, speedMax), effect1, effect2)
