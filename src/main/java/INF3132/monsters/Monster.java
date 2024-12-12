@@ -3,10 +3,8 @@ package INF3132.monsters;
 import INF3132.attacks.Attack;
 import INF3132.attacks.exception.AttackFailedException;
 
-import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public abstract class Monster {
     private String name;
@@ -18,7 +16,7 @@ public abstract class Monster {
     private int speed;
 
     private final List<Attack> attacks;
-    private final Set<Status> status;
+    private Status status;
     private final MonsterType type;
 
     public Monster(
@@ -41,7 +39,7 @@ public abstract class Monster {
         int speed,
         List<Attack> attacks
     ) {
-        this(name, type, maxHp, attack, defense, speed, attacks, new HashSet<Status>());
+        this(name, type, maxHp, attack, defense, speed, attacks, null);
     }
 
     public Monster(
@@ -52,7 +50,7 @@ public abstract class Monster {
         int defense,
         int speed,
         List<Attack> attacks,
-        Set<Status> status
+        Status status
     ) {
         this.name = name;
         this.type = type;
@@ -71,9 +69,17 @@ public abstract class Monster {
      *
      * @param a The attack to take damage from
      */
-    public abstract void receiveAttack(Attack a);
+    public void receiveAttack(Attack a){
+        // TODO Implémenter la mécanique de calcul de dommages
+    }
 
-    public abstract void attack(Monster target, Attack a) throws AttackFailedException;
+    public void attack(Monster target, Attack a) throws AttackFailedException {
+        // TODO Implémenter la mécanique d'attaque
+
+        doAfterAttack();
+    }
+
+    public abstract void doAfterAttack();
 
     public String getName() {
         return name;
@@ -132,7 +138,7 @@ public abstract class Monster {
     }
 
     // Status
-    public Set<Status> getStatus() {
+    public Status getStatus() {
         return status;
     }
 

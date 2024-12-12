@@ -7,4 +7,5 @@ public enum MonsterType {
     GRASS,      // Plante
     GROUND,     // Terre
     INSECT,     // Insecte
+    ELECTRIC,   // Foudre
 }
