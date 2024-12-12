@@ -37,14 +37,14 @@ public class MonsterParser extends BaseParser<Monster>{
             System.err.println(e);
         }
 
-        int hpMin = Integer.parseInt(blockData.get("HP").split(" ")[0]);
-        int hpMax = Integer.parseInt(blockData.get("HP").split(" ")[0]);
-        int attackMin = Integer.parseInt(blockData.get("Attack").split(" ")[0]);
-        int attackMax = Integer.parseInt(blockData.get("Attack").split(" ")[0]);
-        int defenseMin = Integer.parseInt(blockData.get("Defense").split(" ")[0]);
-        int defenseMax = Integer.parseInt(blockData.get("Defense").split(" ")[0]);
-        int speedMin = Integer.parseInt(blockData.get("Speed").split(" ")[0]);
-        int speedMax = Integer.parseInt(blockData.get("Speed").split(" ")[0]);
+        int hpMin =         Integer.parseInt(blockData.get("HP").split(" ")[0]);
+        int hpMax =         Integer.parseInt(blockData.get("HP").split(" ")[0]);
+        int attackMin =     Integer.parseInt(blockData.get("Attack").split(" ")[0]);
+        int attackMax =     Integer.parseInt(blockData.get("Attack").split(" ")[0]);
+        int defenseMin =    Integer.parseInt(blockData.get("Defense").split(" ")[0]);
+        int defenseMax =    Integer.parseInt(blockData.get("Defense").split(" ")[0]);
+        int speedMin =      Integer.parseInt(blockData.get("Speed").split(" ")[0]);
+        int speedMax =      Integer.parseInt(blockData.get("Speed").split(" ")[0]);
 
         double effect1 = 0.0;
         double effect2 = 0.0;

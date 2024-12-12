@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,11 +32,21 @@ public abstract class BaseParser<T> {
         while((l = reader.readLine()) != null){
             l = l.trim();
             if(!l.equals(patternStart)) break;
+
             while((l = reader.readLine()) != null){
                 l = l.trim();
                 if(l.equals(patternEnd)) break;
-                String[] value = l.split(" ", 2);
-                if(value.length == 2) blockData.put(value[0], value[1]);
+
+                List<String> values = new ArrayList<String>(
+                    Arrays.asList(l.split(" "))
+                );
+
+                values.removeIf(v -> v.isEmpty());
+
+                String key = values.get(0).trim();
+                String value = String.join(" ", values.subList(1, values.size())).trim();
+
+                blockData.put(key, value);
             }
         }
         return blockData;
@@ -51,7 +62,7 @@ public abstract class BaseParser<T> {
             case "ground":      return MonsterType.GROUND;
             case "insect":      return MonsterType.INSECT;
             case "normal":      return MonsterType.NORMAL;
-            default: throw new InvalidMonsterTypeException();
+            default:            throw new InvalidMonsterTypeException();
         }
     }
 
