@@ -13,6 +13,11 @@ public class Combat {
         this.currentTurn = currentTurn;
     }
 
+    public void sendMessage(String message) {
+        // TODO: Calculer un TTL selon la taille du message.
+        this.sendMessage(message, 8000); // WARN: Censtante Temporaire
+    }
+
     /**
      * Show a status message for the fight.
      */

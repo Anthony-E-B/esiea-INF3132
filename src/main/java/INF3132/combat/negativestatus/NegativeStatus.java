@@ -6,13 +6,13 @@ import INF3132.combat.Combat;
 public abstract class NegativeStatus {
 
 	private Monster monster;
-	private Combat game;
+	private Combat combat;
 
 	private int triggeredAtTurn;
 
 	public NegativeStatus(Monster m, Combat g) {
 		this.monster = m;
-		this.game = g;
+		this.combat = g;
 
 		this.triggeredAtTurn = g.getCurrentTurn();
 	}
@@ -61,8 +61,8 @@ public abstract class NegativeStatus {
 		return monster;
 	}
 
-	public Combat getGame() {
-		return game;
+	public Combat getCombat() {
+		return combat;
 	}
 }
 
