@@ -157,6 +157,12 @@ public abstract class Monster {
         doAfterAttack();
     }
 
+    public void disposeNegativeStatus(NegativeStatus status) {
+        if (negativeStatus == status) {
+            negativeStatus = null;
+        }
+    }
+
     public abstract void doAfterAttack();
 
     /**
