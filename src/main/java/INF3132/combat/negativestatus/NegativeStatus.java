@@ -1,6 +1,7 @@
 package INF3132.combat.negativestatus;
 
 import INF3132.monsters.Monster;
+import INF3132.attacks.exception.AttackFailedException;
 import INF3132.combat.Combat;
 
 public abstract class NegativeStatus {
@@ -10,11 +11,11 @@ public abstract class NegativeStatus {
 
 	private int triggeredAtTurn;
 
-	public NegativeStatus(Monster m, Combat g) {
+	public NegativeStatus(Monster m, Combat c) {
 		this.monster = m;
-		this.combat = g;
+		this.combat = c;
 
-		this.triggeredAtTurn = g.getCurrentTurn();
+		this.triggeredAtTurn = c.getCurrentTurn();
 	}
 
 	/**
@@ -30,19 +31,14 @@ public abstract class NegativeStatus {
 	public void turnEndedHook() { }
 
 	/**
+	 * A hook method to trigger before doing an attack.
+	 */
+	public void beforeAttackHook() throws AttackFailedException { }
+
+	/**
 	 * A hook method that should be called each time the affected monster attacks.
 	 */
 	public void attackedHook(float a) { }
-
-	/**
-	 * Know if the current side effect should make the attack fail for this turn.
-	 *
-	 * @return {@code true} if the attack for this turn should fail,
-	 *  {@code false} if not.
-	 */
-	public boolean triggersAttackFailure() {
-		return false;
-	}
 
 	/**
 	 * Know at which game turn the negative status appeared.

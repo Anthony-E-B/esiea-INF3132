@@ -140,8 +140,11 @@ public abstract class Monster {
         return COEF_MIN + (float)Math.random() * (COEF_MAX - COEF_MIN);
     }
 
-    public void attack(Monster target) {
+    public void attack(Monster target) throws AttackFailedException {
+        if (negativeStatus != null) negativeStatus.beforeAttackHook();
+
         float inflictedDamage = target.receiveAttack(this);
+
         if (negativeStatus != null) negativeStatus.attackedHook(inflictedDamage);
 
         doAfterAttack();
