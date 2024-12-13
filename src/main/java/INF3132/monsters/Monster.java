@@ -2,6 +2,8 @@ package INF3132.monsters;
 
 import INF3132.attacks.Attack;
 import INF3132.attacks.exception.AttackFailedException;
+import INF3132.items.exception.ItemException;
+import INF3132.items.subclasses.Potion;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -164,35 +166,16 @@ public abstract class Monster {
         return maxHp;
     }
 
-    public void setMaxHp(int maxHp) {
-        this.maxHp = maxHp;
-    }
-
-    // Attack : protected set
     public int getAttack() {
         return attack;
     }
 
-    protected void setAttack(int attack) {
-        this.attack = attack;
-    }
-
-    // Defense : protected set
     public int getDefense() {
         return defense;
     }
 
-    protected void setDefense(int defense) {
-        this.defense = defense;
-    }
-
-    // Speed : protected set
     public int getSpeed() {
         return speed;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
     }
 
     // Attacks
@@ -208,5 +191,33 @@ public abstract class Monster {
     // Type
     public MonsterType getType() {
         return type;
+    }
+
+    public void usePotion(Potion p) throws ItemException {
+        String stat = p.getStatAffected();
+        int power = p.use(this);
+        switch (stat.toUpperCase()) { 
+            case "HP":
+                this.hp = Math.min(this.hp + power, this.maxHp);
+                System.out.println(this.name + " - HP actuel: " + this.hp);
+                break;
+            case "ATTACK":
+                this.attack += power;
+                System.out.println(this.name + " - Attaque actuelle: " + this.attack);
+                break;
+            case "DEFENSE":
+                this.defense += power;
+                System.out.println(this.name + " - Défense actuelle: " + this.defense);
+                break;
+            case "SPEED":
+                this.speed += power;
+                System.out.println(this.name + " - Vitesse actuelle: " + this.speed);
+                break;
+            case "NBUSE":
+                // TODO Implémenter une logique d'augmentation des nbUse de capacité
+                break;
+            default:
+                throw new ItemException();
+        }
     }
 }
