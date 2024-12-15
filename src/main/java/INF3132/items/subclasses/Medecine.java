@@ -1,10 +1,10 @@
 package INF3132.items.subclasses;
 
-import INF3132.items.exception.ItemException;
+import INF3132.items.exception.UnusableItemException;
 import INF3132.monsters.Monster;
 import INF3132.monsters.Status;
 
-public class Medecine extends Consummable {
+public class Medecine extends Consumable {
     private Status status;
 
     public Medecine(String name, Status status){
@@ -13,12 +13,11 @@ public class Medecine extends Consummable {
     }
 
     @Override
-    public int use(Monster m) throws ItemException {
-        // TODO Implémenter un fonctionnement supplémentaire
+    public int use(Monster m) throws UnusableItemException {
         if(checkIfUsable(m)){
             this.setUsed(true);
             return 1;
-        } else throw new ItemException();
+        } else throw new UnusableItemException();
     }
 
     @Override

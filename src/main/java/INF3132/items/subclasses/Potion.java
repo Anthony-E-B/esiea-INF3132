@@ -1,25 +1,25 @@
 package INF3132.items.subclasses;
 
-import INF3132.items.exception.ItemException;
+import INF3132.items.Stats;
+import INF3132.items.exception.UnusableItemException;
 import INF3132.monsters.Monster;
 
-public class Potion extends Consummable {
+public class Potion extends Consumable {
     private int itemPower;
-    private String statAffected;
+    private Stats statAffected;
 
-    public Potion(String name, int itemPower, String statAffected){
+    public Potion(String name, int itemPower, Stats statAffected){
         super(name);    
         this.itemPower = itemPower;
         this.statAffected = statAffected;
     }
 
     @Override
-    public int use(Monster m) throws ItemException{
-        // TODO Implémenter un fonctionnement supplémentaire
+    public int use(Monster m) throws UnusableItemException{
         if(checkIfUsable(m)){
             this.setUsed(true);
             return this.itemPower;
-        } else throw new ItemException();
+        } else throw new UnusableItemException();
     }
 
     @Override
@@ -28,7 +28,7 @@ public class Potion extends Consummable {
         return true;
     }
 
-    public String getStatAffected() {
+    public Stats getStatAffected() {
         return statAffected;
     }
 }
