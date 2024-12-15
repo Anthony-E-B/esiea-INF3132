@@ -2,8 +2,9 @@ package INF3132.monsters;
 
 import INF3132.attacks.Attack;
 import INF3132.attacks.exception.AttackFailedException;
-import INF3132.items.exception.ItemException;
+import INF3132.items.exception.UnusableItemException;
 import INF3132.items.subclasses.Potion;
+import INF3132.items.Stats;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -193,31 +194,24 @@ public abstract class Monster {
         return type;
     }
 
-    public void usePotion(Potion p) throws ItemException {
-        String stat = p.getStatAffected();
+    public void usePotion(Potion p) throws UnusableItemException {
+        Stats stat = p.getStatAffected();
         int power = p.use(this);
-        switch (stat.toUpperCase()) { 
-            case "HP":
+        switch (stat) { 
+            case HP:
                 this.hp = Math.min(this.hp + power, this.maxHp);
-                System.out.println(this.name + " - HP actuel: " + this.hp);
                 break;
-            case "ATTACK":
+            case ATTACK:
                 this.attack += power;
-                System.out.println(this.name + " - Attaque actuelle: " + this.attack);
                 break;
-            case "DEFENSE":
+            case DEFENSE:
                 this.defense += power;
-                System.out.println(this.name + " - Défense actuelle: " + this.defense);
                 break;
-            case "SPEED":
+            case SPEED:
                 this.speed += power;
-                System.out.println(this.name + " - Vitesse actuelle: " + this.speed);
-                break;
-            case "NBUSE":
-                // TODO Implémenter une logique d'augmentation des nbUse de capacité
                 break;
             default:
-                throw new ItemException();
+                throw new UnusableItemException();
         }
     }
 }
