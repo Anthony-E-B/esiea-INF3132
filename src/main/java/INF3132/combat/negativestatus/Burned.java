@@ -5,14 +5,17 @@ import INF3132.combat.Combat;
 
 public class Burned extends NegativeStatus {
 
-	public Burned(Monster m, Combat c) {
-		super(m, c);
-	}
+    public Burned(Monster m, Combat c) {
+        super(m, c);
+    }
 
-	@Override
-	public void attackedHook(float damage) {
-		this.getMonster().inflictDamage(
-			Math.round(damage / 10)
-		);
-	}
+    @Override
+    public void turnStartedHook() {
+        getMonster().inflictDamage(
+            Math.round(getMonster().getAttack() / 10)
+        );
+        getCombat().sendMessage(
+            String.format("%s souffre de sa brûlure !", getMonster().getName())
+        );
+    }
 }
