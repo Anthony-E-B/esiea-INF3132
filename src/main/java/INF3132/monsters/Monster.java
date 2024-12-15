@@ -209,10 +209,10 @@ public abstract class Monster {
         return type;
     }
 
-    public void usePotion(Potion p) throws UnusableItemException {
+    public void drinkPotion(Potion p) throws UnusableItemException {
         Stats stat = p.getStatAffected();
         int power = p.use(this);
-        switch (stat) { 
+        switch (stat) {
             case HP:
                 this.hp = Math.min(this.hp + power, this.maxHp);
                 break;
