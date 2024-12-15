@@ -2,7 +2,7 @@ package INF3132.attacks;
 
 import INF3132.monsters.MonsterType;
 
-public abstract class Attack {
+public class Attack {
     private String name;
 
     private int power;

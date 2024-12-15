@@ -5,6 +5,7 @@ import INF3132.attacks.exception.AttackFailedException;
 import INF3132.items.exception.UnusableItemException;
 import INF3132.items.subclasses.Potion;
 import INF3132.items.Stats;
+import INF3132.combat.negativestatus.NegativeStatus;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ public abstract class Monster {
     private final List<Attack> attacks;
     private Status status;
     private final MonsterType type;
+
+    private NegativeStatus negativeStatus;
 
     /**
      * A type this monster is weak against
@@ -79,8 +82,9 @@ public abstract class Monster {
      * Handle fist-fight attack from the monster {@code m}.
      *
      * @param m The attacker.
+     * @return The inflicted damage, not rounded.
      */
-    public void receiveAttack(Monster m) {
+    public float receiveAttack(Monster m) {
         float damage = 20 * (m.getAttack() / getDefense()) * Monster.getRandomCoef();
 
         if (m.getType() == weakType) damage *= 2;
@@ -89,13 +93,7 @@ public abstract class Monster {
         int roundedDamage = Math.round(damage);
 
         inflictDamage(roundedDamage);
-    }
-
-    /**
-     * Inflicts damage to this monster up to 100% of its remaining health.
-     */
-    protected void inflictDamage(int damage) {
-        this.hp -= Math.min(hp, damage);
+        return damage;
     }
 
     /**
@@ -105,8 +103,9 @@ public abstract class Monster {
      *
      * @param m The attacker.
      * @param a The attack to take damage from
+     * @return The inflicted damage, not rounded.
      */
-    public void receiveAttack(Monster m, Attack a) {
+    public float receiveAttack(Monster m, Attack a) {
         float avantage;
         MonsterType attackType = a.getType();
 
@@ -124,6 +123,14 @@ public abstract class Monster {
         int roundedDamage = Math.round(damage);
 
         inflictDamage(roundedDamage);
+        return damage;
+    }
+
+    /**
+     * Inflicts damage to this monster up to 100% of its remaining health.
+     */
+    public void inflictDamage(int damage) {
+        this.hp -= Math.min(hp, damage);
     }
 
     public static final float COEF_MIN = 0.85f;
@@ -136,8 +143,16 @@ public abstract class Monster {
         return COEF_MIN + (float)Math.random() * (COEF_MAX - COEF_MIN);
     }
 
+    public void attack(Monster target) {
+        float inflictedDamage = target.receiveAttack(this);
+        if (negativeStatus != null) negativeStatus.attackedHook(inflictedDamage);
+
+        doAfterAttack();
+    }
+
     public void attack(Monster target, Attack a) throws AttackFailedException {
-        // TODO Implémenter la mécanique d'attaque
+        float inflictedDamage = target.receiveAttack(this, a);
+        if (negativeStatus != null) negativeStatus.attackedHook(inflictedDamage);
 
         doAfterAttack();
     }
