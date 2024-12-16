@@ -4,8 +4,11 @@ import INF3132.attacks.Attack;
 import INF3132.attacks.exception.AttackFailedException;
 import INF3132.items.exception.UnusableItemException;
 import INF3132.items.subclasses.Potion;
+import INF3132.monsters.subclasses.WaterMonster;
 import INF3132.items.Stats;
+import INF3132.combat.Combat;
 import INF3132.combat.negativestatus.NegativeStatus;
+import INF3132.combat.terrain.Terrain;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -143,21 +146,53 @@ public abstract class Monster {
         return COEF_MIN + (float)Math.random() * (COEF_MAX - COEF_MIN);
     }
 
-    public void attack(Monster target) {
+    public void attack(Monster target) throws AttackFailedException {
+        beforeAttack();
         float inflictedDamage = target.receiveAttack(this);
-        if (negativeStatus != null) negativeStatus.attackedHook(inflictedDamage);
-
-        doAfterAttack();
+        afterAttack(inflictedDamage);
     }
 
     public void attack(Monster target, Attack a) throws AttackFailedException {
+        beforeAttack();
         float inflictedDamage = target.receiveAttack(this, a);
-        if (negativeStatus != null) negativeStatus.attackedHook(inflictedDamage);
-
-        doAfterAttack();
+        afterAttack(inflictedDamage, a);
     }
 
-    public abstract void doAfterAttack();
+    /**
+     * Hook to be called before each attack.
+     * @implNote If you override this method, always call {@code super.beforeAttack()} at the top of the override method.
+     */
+    protected void beforeAttack() throws AttackFailedException {
+        if (!(this instanceof FloodAffectedMonster)) return;
+
+        Combat c = Combat.getCurrentCombat();
+        Terrain t = c.getTerrain();
+        if (!t.isFlooded()) return;
+
+        WaterMonster flooder = t.getFlooder();
+        // NOTE: If there are no original flooder (e.g. rainy biome), monsters have 1/2 odds of falling due to the flooded terrain. Should rarely happen.
+        float odds = flooder == null ? .5f : flooder.getFall();
+
+        if ((float)Math.random() <= odds) {
+            c.sendMessage(String.format(
+                "%s glisse et rate son attaque !",
+                getName()
+            ));
+            throw new AttackFailedException();
+        }
+    }
+
+    /**
+     * Hook to be called after each attack.
+     * @implNote If you override this method, always call {@code super.beforeAttack()} at the top of the override method.
+     */
+    protected void afterAttack(float inflictedDamage) {
+        this.afterAttack(inflictedDamage, null);
+    }
+
+    protected void afterAttack(float inflictedDamage, Attack a) {
+        if (negativeStatus != null) negativeStatus.attackedHook(inflictedDamage);
+    }
 
     /**
      * Checks if the monster is able to fight.

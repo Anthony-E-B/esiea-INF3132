@@ -7,15 +7,15 @@ import INF3132.monsters.Monster;
 import INF3132.monsters.MonsterType;
 
 public class ElectricMonster extends Monster {
-    double paralysis; 
+    float paralysis;
 
-    public ElectricMonster(String name, int hpMax, int attack, int defense, int speed, List<Attack> attacks , double paralysis) {
+    public ElectricMonster(String name, int hpMax, int attack, int defense, int speed, List<Attack> attacks , float paralysis) {
         super(name, MonsterType.ELECTRIC, hpMax, attack, defense, speed, attacks);
         this.paralysis = paralysis;
     }
 
-    @Override  
-    public void doAfterAttack(){
+    @Override
+    public void afterAttack(float inflictedDamage){
         // TODO Implémenter la mécanique de paralysie
     }
 }
