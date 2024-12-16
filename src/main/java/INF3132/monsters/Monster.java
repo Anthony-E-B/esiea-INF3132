@@ -130,7 +130,7 @@ public abstract class Monster {
      * Inflicts damage to this monster up to 100% of its remaining health.
      */
     public void inflictDamage(int damage) {
-        setHp(Math.min(hp, damage));
+        setHp(getHp() - Math.min(hp, damage));
     }
 
     public static final float COEF_MIN = 0.85f;
