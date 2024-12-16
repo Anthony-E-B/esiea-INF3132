@@ -2,6 +2,9 @@ package INF3132.monsters;
 
 import INF3132.attacks.Attack;
 import INF3132.attacks.exception.AttackFailedException;
+import INF3132.items.exception.UnusableItemException;
+import INF3132.items.subclasses.Potion;
+import INF3132.items.Stats;
 import INF3132.combat.negativestatus.NegativeStatus;
 
 import java.util.List;
@@ -188,24 +191,15 @@ public abstract class Monster {
     }
 
     // Attack : protected set
+
     public int getAttack() {
         return attack;
     }
 
-    protected void setAttack(int attack) {
-        this.attack = attack;
-    }
-
-    // Defense : protected set
     public int getDefense() {
         return defense;
     }
 
-    protected void setDefense(int defense) {
-        this.defense = defense;
-    }
-
-    // Speed : protected set
     public int getSpeed() {
         return speed;
     }
@@ -227,5 +221,26 @@ public abstract class Monster {
     // Type
     public MonsterType getType() {
         return type;
+    }
+
+    public void drinkPotion(Potion p) throws UnusableItemException {
+        Stats stat = p.getStatAffected();
+        int power = p.use(this);
+        switch (stat) {
+            case HP:
+                this.hp = Math.min(this.hp + power, this.maxHp);
+                break;
+            case ATTACK:
+                this.attack += power;
+                break;
+            case DEFENSE:
+                this.defense += power;
+                break;
+            case SPEED:
+                this.speed += power;
+                break;
+            default:
+                throw new UnusableItemException();
+        }
     }
 }
