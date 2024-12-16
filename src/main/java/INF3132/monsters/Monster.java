@@ -130,7 +130,7 @@ public abstract class Monster {
      * Inflicts damage to this monster up to 100% of its remaining health.
      */
     public void inflictDamage(int damage) {
-        this.hp -= Math.min(hp, damage);
+        setHp(getHp() - Math.min(hp, damage));
     }
 
     public static final float COEF_MIN = 0.85f;
@@ -178,9 +178,19 @@ public abstract class Monster {
         return hp;
     }
 
+    protected void setHp(int hp) {
+        this.hp = hp;
+    }
+
     public int getMaxHp() {
         return maxHp;
     }
+
+    protected void setMaxHp(int maxHp) {
+        this.maxHp = maxHp;
+    }
+
+    // Attack : protected set
 
     public int getAttack() {
         return attack;
@@ -192,6 +202,10 @@ public abstract class Monster {
 
     public int getSpeed() {
         return speed;
+    }
+
+    protected void setSpeed(int speed) {
+        this.speed = speed;
     }
 
     // Attacks
