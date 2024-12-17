@@ -163,6 +163,8 @@ public abstract class Monster {
      * @implNote If you override this method, always call {@code super.beforeAttack()} at the top of the override method.
      */
     protected void beforeAttack() throws AttackFailedException {
+        if (negativeStatus != null) negativeStatus.beforeAttackHook();
+
         if (!(this instanceof FloodAffectedMonster)) return;
 
         Combat c = Combat.getCurrentCombat();
@@ -192,6 +194,12 @@ public abstract class Monster {
 
     protected void afterAttack(float inflictedDamage, Attack a) {
         if (negativeStatus != null) negativeStatus.attackedHook(inflictedDamage);
+    }
+
+    public void disposeNegativeStatus(NegativeStatus status) {
+        if (negativeStatus == status) {
+            negativeStatus = null;
+        }
     }
 
     /**
