@@ -31,22 +31,27 @@ public abstract class BaseParser<T> {
         String l;
         while((l = reader.readLine()) != null){
             l = l.trim();
-            if(!l.equals(patternStart)) break;
+            if(l.equals(patternStart)) {
+                while((l = reader.readLine()) != null){
+                    l = l.trim();
+                    if(l.equals(patternEnd)) break;
 
-            while((l = reader.readLine()) != null){
-                l = l.trim();
-                if(l.equals(patternEnd)) break;
+                    List<String> values = new ArrayList<String>(
+                        Arrays.asList(l.split("\\s+"))
+                    );
 
-                List<String> values = new ArrayList<String>(
-                    Arrays.asList(l.split(" "))
-                );
+                    values.removeIf(v -> v.isEmpty());
 
-                values.removeIf(v -> v.isEmpty());
+                    if (values.size() < 2) {
+                        System.err.println("Ligne mal formée: " + l);
+                        continue;
+                    }
 
-                String key = values.get(0).trim();
-                String value = String.join(" ", values.subList(1, values.size())).trim();
-
-                blockData.put(key, value);
+                    String key = values.get(0).trim();
+                    String value = String.join(" ", values.subList(1, values.size())).trim();
+                    blockData.put(key, value);
+                }
+                break;
             }
         }
         return blockData;
@@ -73,7 +78,7 @@ public abstract class BaseParser<T> {
      */
     public List<T> parseFull(String patternStart, String patternEnd) throws IOException {
         List<T> result = new ArrayList<>();
-        Map<String, String> blockData; 
+        Map<String, String> blockData;
         while(!(blockData = readBlock(patternStart, patternEnd)).isEmpty()){
             result.add(parseBlock(blockData));
         }
