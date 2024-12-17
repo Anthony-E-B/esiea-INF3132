@@ -2,7 +2,13 @@ package INF3132.monsters;
 
 import INF3132.attacks.Attack;
 import INF3132.attacks.exception.AttackFailedException;
+import INF3132.items.exception.UnusableItemException;
+import INF3132.items.subclasses.Potion;
+import INF3132.monsters.subclasses.WaterMonster;
+import INF3132.items.Stats;
+import INF3132.combat.Combat;
 import INF3132.combat.negativestatus.NegativeStatus;
+import INF3132.combat.terrain.Terrain;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -127,7 +133,7 @@ public abstract class Monster {
      * Inflicts damage to this monster up to 100% of its remaining health.
      */
     public void inflictDamage(int damage) {
-        this.hp -= Math.min(hp, damage);
+        setHp(getHp() - Math.min(hp, damage));
     }
 
     public static final float COEF_MIN = 0.85f;
@@ -141,20 +147,53 @@ public abstract class Monster {
     }
 
     public void attack(Monster target) throws AttackFailedException {
-        if (negativeStatus != null) negativeStatus.beforeAttackHook();
-
+        beforeAttack();
         float inflictedDamage = target.receiveAttack(this);
-
-        if (negativeStatus != null) negativeStatus.attackedHook(inflictedDamage);
-
-        doAfterAttack();
+        afterAttack(inflictedDamage);
     }
 
     public void attack(Monster target, Attack a) throws AttackFailedException {
+        beforeAttack();
         float inflictedDamage = target.receiveAttack(this, a);
-        if (negativeStatus != null) negativeStatus.attackedHook(inflictedDamage);
+        afterAttack(inflictedDamage, a);
+    }
 
-        doAfterAttack();
+    /**
+     * Hook to be called before each attack.
+     * @implNote If you override this method, always call {@code super.beforeAttack()} at the top of the override method.
+     */
+    protected void beforeAttack() throws AttackFailedException {
+        if (negativeStatus != null) negativeStatus.beforeAttackHook();
+
+        if (!(this instanceof FloodAffectedMonster)) return;
+
+        Combat c = Combat.getCurrentCombat();
+        Terrain t = c.getTerrain();
+        if (!t.isFlooded()) return;
+
+        WaterMonster flooder = t.getFlooder();
+        // NOTE: If there are no original flooder (e.g. rainy biome), monsters have 1/2 odds of falling due to the flooded terrain. Should rarely happen.
+        float odds = flooder == null ? .5f : flooder.getFall();
+
+        if ((float)Math.random() <= odds) {
+            c.sendMessage(String.format(
+                "%s glisse et rate son attaque !",
+                getName()
+            ));
+            throw new AttackFailedException();
+        }
+    }
+
+    /**
+     * Hook to be called after each attack.
+     * @implNote If you override this method, always call {@code super.beforeAttack()} at the top of the override method.
+     */
+    protected void afterAttack(float inflictedDamage) {
+        this.afterAttack(inflictedDamage, null);
+    }
+
+    protected void afterAttack(float inflictedDamage, Attack a) {
+        if (negativeStatus != null) negativeStatus.attackedHook(inflictedDamage);
     }
 
     public void disposeNegativeStatus(NegativeStatus status) {
@@ -162,8 +201,6 @@ public abstract class Monster {
             negativeStatus = null;
         }
     }
-
-    public abstract void doAfterAttack();
 
     /**
      * Checks if the monster is able to fight.
@@ -184,38 +221,33 @@ public abstract class Monster {
         return hp;
     }
 
+    protected void setHp(int hp) {
+        this.hp = hp;
+    }
+
     public int getMaxHp() {
         return maxHp;
     }
 
-    public void setMaxHp(int maxHp) {
+    protected void setMaxHp(int maxHp) {
         this.maxHp = maxHp;
     }
 
     // Attack : protected set
+
     public int getAttack() {
         return attack;
     }
 
-    protected void setAttack(int attack) {
-        this.attack = attack;
-    }
-
-    // Defense : protected set
     public int getDefense() {
         return defense;
     }
 
-    protected void setDefense(int defense) {
-        this.defense = defense;
-    }
-
-    // Speed : protected set
     public int getSpeed() {
         return speed;
     }
 
-    public void setSpeed(int speed) {
+    protected void setSpeed(int speed) {
         this.speed = speed;
     }
 
@@ -232,5 +264,26 @@ public abstract class Monster {
     // Type
     public MonsterType getType() {
         return type;
+    }
+
+    public void drinkPotion(Potion p) throws UnusableItemException {
+        Stats stat = p.getStatAffected();
+        int power = p.use(this);
+        switch (stat) {
+            case HP:
+                this.hp = Math.min(this.hp + power, this.maxHp);
+                break;
+            case ATTACK:
+                this.attack += power;
+                break;
+            case DEFENSE:
+                this.defense += power;
+                break;
+            case SPEED:
+                this.speed += power;
+                break;
+            default:
+                throw new UnusableItemException();
+        }
     }
 }

@@ -3,17 +3,19 @@ package INF3132.monsters.subclasses;
 import java.util.List;
 
 import INF3132.attacks.Attack;
+import INF3132.monsters.FloodAffectedMonster;
 import INF3132.monsters.Monster;
 import INF3132.monsters.MonsterType;
 
-public class GroundMonster extends Monster {
+public class GroundMonster extends Monster implements FloodAffectedMonster {
 
     public GroundMonster(String name, int hpMax, int attack, int defense, int speed, List<Attack> attacks) {
         super(name, MonsterType.GROUND, hpMax, attack, defense, speed, attacks);
     }
 
-    @Override  
-    public void doAfterAttack(){
+    @Override
+    public void afterAttack(float inflictedDamage, Attack a) {
+        super.afterAttack(inflictedDamage, a);
         // TODO Implémenter la mécanique de tunnel
     }
 }
