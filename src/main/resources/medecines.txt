@@ -1,0 +1,14 @@
+Medecine
+    Name    AntiBrule
+    Status  BURNED
+EndMedecine
+
+Medecine
+    Name    AntiPara
+    Status  PARALYSIS
+EndMedecine
+
+Medecine
+    Name    Antidote
+    Status  POISON
+EndMedecine
