@@ -1,0 +1,35 @@
+Potion
+  Name            Potion
+  StatAffected    HP
+  ItemPower       20
+EndPotion
+
+Potion
+  Name            SuperPotion
+  StatAffected    HP
+  ItemPower       50
+EndPotion
+
+Potion
+  Name            Muscle+
+  StatAffected    ATTACK
+  ItemPower       40
+EndPotion
+
+Potion
+  Name            Vitesse+
+  StatAffected    SPEED
+  ItemPower       20
+EndPotion
+
+Potion
+  Name            Defense+
+  StatAffected    DEFENSE
+  ItemPower       30
+EndPotion
+
+Potion
+  Name            HyperPotion
+  StatAffected    HP
+  ItemPower       100
+EndPotion
