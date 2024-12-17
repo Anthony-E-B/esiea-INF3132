@@ -17,11 +17,11 @@ public class Paralysis extends NegativeStatus {
     }
 
     public void turnEndedHook() {
-        int nbTurnsParalised = getCombat().getCurrentTurn() - getTriggeredAtTurn();
+        int nbTurnsParalysed = getCombat().getCurrentTurn() - getTriggeredAtTurn();
 
         // NOTE: the increasing chance of getting out of that state,
-        // reaching 100% starting from turn 6 of being paralised
-        if (Math.random() < ((1 * nbTurnsParalised) / 6.0)) {
+        // reaching 100% starting from turn 6 of being paralysed
+        if (Math.random() < ((1 * nbTurnsParalysed) / 6.0)) {
             getCombat().sendMessage(
                 String.format("%s n'est plus paralysé.", getMonster().getName())
             );
