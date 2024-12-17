@@ -18,14 +18,14 @@ import INF3132.monsters.subclasses.NormalMonster;
 import INF3132.parser.exception.InvalidMonsterTypeException;
 
 public class MonsterParser extends BaseParser<Monster>{
-    
+
     public MonsterParser(String path) throws IOException {
-        super(path);    
+        super(path);
     }
 
     @Override
     protected Monster parseBlock(Map<String, String> blockData){
-        Monster t; 
+        Monster t;
         t = null;
         String name = blockData.get("Name");
         MonsterType type = MonsterType.NORMAL;
@@ -46,15 +46,15 @@ public class MonsterParser extends BaseParser<Monster>{
         int speedMin =      Integer.parseInt(blockData.get("Speed").split(" ")[0]);
         int speedMax =      Integer.parseInt(blockData.get("Speed").split(" ")[0]);
 
-        double effect1 = 0.0;
-        double effect2 = 0.0;
+        float effect1 = .0f;
+        float effect2 = .0f;
 
         List<Attack> attacks = new ArrayList<Attack>();
 
         switch (type) {
             case WATER:
-            effect1 = Double.parseDouble(blockData.get("Flood"));
-            effect2 = Double.parseDouble(blockData.get("Fall"));
+            effect1 = Float.parseFloat(blockData.get("Flood"));
+            effect2 = Float.parseFloat(blockData.get("Fall"));
             return new WaterMonster(
                 name,
                 getStat(hpMin, hpMax),
@@ -64,9 +64,9 @@ public class MonsterParser extends BaseParser<Monster>{
                 attacks,
                 effect1,
                 effect2
-            ); 
+            );
             case ELECTRIC:
-            effect1 = Double.parseDouble(blockData.get("Paralysis"));
+            effect1 = Float.parseFloat(blockData.get("Paralysis"));
             return new ElectricMonster(
                 name,
                 getStat(hpMin, hpMax),
@@ -75,7 +75,7 @@ public class MonsterParser extends BaseParser<Monster>{
                 getStat(speedMin, speedMax),
                 attacks,
                 effect1
-            ); 
+            );
             case FIRE:
             return new FireMonster(
                 name,
@@ -84,7 +84,7 @@ public class MonsterParser extends BaseParser<Monster>{
                 getStat(defenseMin, defenseMax),
                 getStat(speedMin, speedMax),
                 attacks
-            ); 
+            );
             case GROUND:
             return new GroundMonster(
                 name,
@@ -93,7 +93,7 @@ public class MonsterParser extends BaseParser<Monster>{
                 getStat(defenseMin, defenseMax),
                 getStat(speedMin, speedMax),
                 attacks
-            ); 
+            );
             case INSECT:
             return new InsectMonster(
                 name,
@@ -102,7 +102,7 @@ public class MonsterParser extends BaseParser<Monster>{
                 getStat(defenseMin, defenseMax),
                 getStat(speedMin, speedMax),
                 attacks
-            ); 
+            );
             case GRASS:
             return new GrassMonster(
                 name,
@@ -111,8 +111,8 @@ public class MonsterParser extends BaseParser<Monster>{
                 getStat(defenseMin, defenseMax),
                 getStat(speedMin, speedMax),
                 attacks
-            ); 
-            case NORMAL: 
+            );
+            case NORMAL:
             return new NormalMonster(
                 name,
                 getStat(hpMin, hpMax),
