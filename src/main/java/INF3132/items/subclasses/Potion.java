@@ -9,7 +9,7 @@ public class Potion extends Consumable {
     private Stats statAffected;
 
     public Potion(String name, int itemPower, Stats statAffected){
-        super(name);    
+        super(name);
         this.itemPower = itemPower;
         this.statAffected = statAffected;
     }
@@ -29,6 +29,10 @@ public class Potion extends Consumable {
     }
 
     public Stats getStatAffected() {
-        return statAffected;
+        return this.statAffected;
+    }
+
+    public int getItemPower(){
+        return this.itemPower;
     }
 }
