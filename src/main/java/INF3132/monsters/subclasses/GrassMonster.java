@@ -9,7 +9,14 @@ import INF3132.monsters.MonsterType;
 
 public class GrassMonster extends Monster implements FloodAffectedMonster {
 
-    public GrassMonster(String name, int hpMax, int attack, int defense, int speed, List<Attack> attacks) {
+    public GrassMonster(
+        String name,
+        int hpMax,
+        int attack,
+        int defense,
+        int speed,
+        List<Attack> attacks
+    ) {
         super(name, MonsterType.GRASS, hpMax, attack, defense, speed, attacks);
     }
 

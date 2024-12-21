@@ -9,7 +9,14 @@ import INF3132.monsters.MonsterType;
 
 public class InsectMonster extends Monster implements FloodAffectedMonster {
 
-    public InsectMonster(String name, int hpMax, int attack, int defense, int speed, List<Attack> attacks) {
+    public InsectMonster(
+        String name,
+        int hpMax,
+        int attack,
+        int defense,
+        int speed,
+        List<Attack> attacks
+    ) {
         super(name, MonsterType.INSECT, hpMax, attack, defense, speed, attacks);
     }
 

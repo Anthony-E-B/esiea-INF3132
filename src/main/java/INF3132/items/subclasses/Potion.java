@@ -8,14 +8,14 @@ public class Potion extends Consumable {
     private int itemPower;
     private Stats statAffected;
 
-    public Potion(String name, int itemPower, Stats statAffected){
+    public Potion(String name, int itemPower, Stats statAffected) {
         super(name);
         this.itemPower = itemPower;
         this.statAffected = statAffected;
     }
 
     @Override
-    public int use(Monster m) throws UnusableItemException{
+    public int use(Monster m) throws UnusableItemException {
         if(checkIfUsable(m)){
             this.setUsed(true);
             return this.itemPower;
@@ -32,7 +32,7 @@ public class Potion extends Consumable {
         return this.statAffected;
     }
 
-    public int getItemPower(){
+    public int getItemPower() {
         return this.itemPower;
     }
 }
