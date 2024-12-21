@@ -23,8 +23,8 @@ public class App {
         // Test chargement monstres
         try {
             mp = new MonsterParser("./monstres.txt");
-            List<Monster> list = mp.parseFull("Monster", "EndMonster");
-            for(Monster m : list){
+            List<Monster> monsterList = mp.parseFull("Monster", "EndMonster");
+            for(Monster m : monsterList){
                 System.out.println(m.getName());
             }
         } catch (IOException e) {
@@ -35,8 +35,8 @@ public class App {
         // Test chargement attaques
         try {
             ap = new AttackParser("./attacks.txt");
-            List<Attack> listA = ap.parseFull("Attack", "EndAttack");
-            for(Attack a : listA){
+            List<Attack> attackList = ap.parseFull("Attack", "EndAttack");
+            for(Attack a : attackList){
                 System.out.println(a.getName() + " - " +  a.getType());
             }
         } catch (IOException e) {
@@ -47,8 +47,8 @@ public class App {
         // Test chargement potions
         try {
             pp = new PotionParser("./potions.txt");
-            List<Potion> listP = pp.parseFull("Potion", "EndPotion");
-            for(Potion p : listP){
+            List<Potion> potionList = pp.parseFull("Potion", "EndPotion");
+            for(Potion p : potionList){
                 System.out.println(p.getName() + " - " + p.getStatAffected() + " " + p.getItemPower());
             }
         } catch (IOException e) {
@@ -59,8 +59,8 @@ public class App {
         // Test chargement des médicaments
         try {
             mep = new MedecineParser("./medecines.txt");
-            List<Medecine> listMe = mep.parseFull("Medecine", "EndMedecine");
-            for(Medecine me : listMe){
+            List<Medecine> medicineList = mep.parseFull("Medecine", "EndMedecine");
+            for (Medecine me : medicineList){
                 System.out.println(me.getName() + " - " + me.getStatus());
             }
         } catch (IOException e) {
