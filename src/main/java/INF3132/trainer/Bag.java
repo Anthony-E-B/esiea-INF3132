@@ -8,9 +8,6 @@ import INF3132.items.Item;
 public class Bag {
     private List<Item> items = new ArrayList<Item>();
 
-    public Bag() {
-    }
-
     public void addItem(Item item) {
         items.add(item);
     }
@@ -23,7 +20,7 @@ public class Bag {
         return items;
     }
 
-    public void setItems(List<Item> items) {
+    private void setItems(List<Item> items) {
         this.items = items;
     }
 
