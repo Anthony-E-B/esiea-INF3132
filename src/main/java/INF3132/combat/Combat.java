@@ -2,6 +2,7 @@ package INF3132.combat;
 
 import INF3132.combat.terrain.Terrain;
 import INF3132.events.EventPublisher;
+import INF3132.trainer.Trainer;
 
 public class Combat {
     private int currentTurn;
@@ -11,7 +12,7 @@ public class Combat {
 
     private static Combat currentCombat = null;
 
-    public Combat() {
+    public Combat(Trainer t1, Trainer t2) {
         this.terrain =      new Terrain();
         this.turnChanged =  new EventPublisher<Integer>();
     }
@@ -45,8 +46,12 @@ public class Combat {
         // TODO:
     }
 
-    // Getters / Setters
+    public static Combat initCombat(Trainer t1, Trainer t2) {
+        Combat.currentCombat = new Combat(t1, t2);
+        return Combat.currentCombat;
+    }
 
+    // Getters / Setters
     public static Combat getCurrentCombat() {
         return Combat.currentCombat;
     }

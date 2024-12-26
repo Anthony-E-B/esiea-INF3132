@@ -2,6 +2,7 @@ package INF3132;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 
 import INF3132.attacks.Attack;
 import INF3132.items.Stats;
@@ -12,6 +13,8 @@ import INF3132.parser.AttackParser;
 import INF3132.parser.MedecineParser;
 import INF3132.parser.MonsterParser;
 import INF3132.parser.PotionParser;
+import INF3132.parser.exception.UnhandledMonsterTypeException;
+import INF3132.trainer.Trainer;
 import INF3132.trainer.Bag;
 
 public class App {
@@ -23,10 +26,11 @@ public class App {
         MedecineParser mep;
 
         // Test chargement monstres
+        List<MonsterFactory> monsterFactories = new ArrayList<>();
         try {
             mp = new MonsterParser("./monstres.txt");
-            List<MonsterFactory> monsterList = mp.parseFull("Monster", "EndMonster");
-            for (MonsterFactory m : monsterList){
+            monsterFactories = mp.parseFull("Monster", "EndMonster");
+            for (MonsterFactory m : monsterFactories){
                 System.out.println(m.getName());
             }
         } catch (IOException e) {
@@ -35,9 +39,10 @@ public class App {
         }
 
         // Test chargement attaques
+        List<Attack> attackList;
         try {
             ap = new AttackParser("./attacks.txt");
-            List<Attack> attackList = ap.parseFull("Attack", "EndAttack");
+            attackList = ap.parseFull("Attack", "EndAttack");
             for (Attack a : attackList){
                 System.out.println(a.getName() + " - " +  a.getType());
             }
@@ -68,6 +73,28 @@ public class App {
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Erreurs lors du chargement du fichier des médicaments !");
+        }
+
+        // Initialize combat
+        Trainer t1 = new Trainer();
+        Trainer t2 = new Trainer();
+
+        Trainer[] trainers = { t1, t2 };
+
+        // Combat combat = Combat.initCombat(t1, t2);
+
+        for (Trainer trainer : trainers) {
+            for (int i = 0; i < 6; i++) {
+                try {
+                    trainer.addToTeam(
+                        monsterFactories.get(
+                            (int)Math.floor(Math.random()  * monsterFactories.size())
+                        ).create()
+                    );
+                } catch (UnhandledMonsterTypeException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         // Test création d'un bag
