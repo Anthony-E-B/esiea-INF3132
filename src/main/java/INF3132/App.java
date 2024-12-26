@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import INF3132.attacks.Attack;
+import INF3132.items.Stats;
 import INF3132.items.subclasses.Medecine;
 import INF3132.items.subclasses.Potion;
 import INF3132.monsters.Monster;
@@ -11,6 +12,7 @@ import INF3132.parser.AttackParser;
 import INF3132.parser.MedecineParser;
 import INF3132.parser.MonsterParser;
 import INF3132.parser.PotionParser;
+import INF3132.trainer.Bag;
 
 public class App {
     public static void main(String[] args) {
@@ -67,5 +69,12 @@ public class App {
             e.printStackTrace();
             System.err.println("Erreurs lors du chargement du fichier des médicaments !");
         }
+
+        // Test création d'un bag
+        Bag bag = new Bag();
+        bag.addItem(new Potion("Potion", 50, Stats.HP));
+        bag.addItem(new Potion("Super Potion", 100, Stats.HP));
+        bag.addItem(new Potion("Hyper Potion", 200, Stats.HP));
+        bag.showItems();
     }
 }
