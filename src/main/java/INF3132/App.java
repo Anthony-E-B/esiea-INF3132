@@ -6,7 +6,7 @@ import java.util.List;
 import INF3132.attacks.Attack;
 import INF3132.items.subclasses.Medecine;
 import INF3132.items.subclasses.Potion;
-import INF3132.monsters.Monster;
+import INF3132.monsters.MonsterFactory;
 import INF3132.parser.AttackParser;
 import INF3132.parser.MedecineParser;
 import INF3132.parser.MonsterParser;
@@ -23,8 +23,8 @@ public class App {
         // Test chargement monstres
         try {
             mp = new MonsterParser("./monstres.txt");
-            List<Monster> monsterList = mp.parseFull("Monster", "EndMonster");
-            for(Monster m : monsterList){
+            List<MonsterFactory> monsterList = mp.parseFull("Monster", "EndMonster");
+            for (MonsterFactory m : monsterList){
                 System.out.println(m.getName());
             }
         } catch (IOException e) {
@@ -36,7 +36,7 @@ public class App {
         try {
             ap = new AttackParser("./attacks.txt");
             List<Attack> attackList = ap.parseFull("Attack", "EndAttack");
-            for(Attack a : attackList){
+            for (Attack a : attackList){
                 System.out.println(a.getName() + " - " +  a.getType());
             }
         } catch (IOException e) {
@@ -48,7 +48,7 @@ public class App {
         try {
             pp = new PotionParser("./potions.txt");
             List<Potion> potionList = pp.parseFull("Potion", "EndPotion");
-            for(Potion p : potionList){
+            for (Potion p : potionList){
                 System.out.println(p.getName() + " - " + p.getStatAffected() + " " + p.getItemPower());
             }
         } catch (IOException e) {
