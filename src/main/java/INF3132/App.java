@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import INF3132.attacks.Attack;
+import INF3132.items.Stats;
 import INF3132.items.subclasses.Medecine;
 import INF3132.items.subclasses.Potion;
 import INF3132.monsters.MonsterFactory;
@@ -14,6 +15,7 @@ import INF3132.parser.MonsterParser;
 import INF3132.parser.PotionParser;
 import INF3132.parser.exception.UnhandledMonsterTypeException;
 import INF3132.trainer.Trainer;
+import INF3132.trainer.Bag;
 
 public class App {
     public static void main(String[] args) {
@@ -94,5 +96,12 @@ public class App {
                 }
             }
         }
+
+        // Test création d'un bag
+        Bag bag = new Bag();
+        bag.addItem(new Potion("Potion", 50, Stats.HP));
+        bag.addItem(new Potion("Super Potion", 100, Stats.HP));
+        bag.addItem(new Potion("Hyper Potion", 200, Stats.HP));
+        bag.showItems();
     }
 }

@@ -13,8 +13,8 @@ abstract public class Consumable extends Item {
     }
 
     /**
-     * Uses a consumable Item on a Monster. 
-     * @param m The monster that we want to use the item on. 
+     * Uses a consumable Item on a Monster.
+     * @param m The monster that we want to use the item on.
      */
     public abstract int use(Monster m) throws UnusableItemException;
 

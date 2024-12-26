@@ -39,11 +39,11 @@ public class MonsterParser extends BaseParser<MonsterFactory>{
 
         switch (type) {
             case WATER:
-            additionalProperties.put("flood", blockData.get("Flood"));
-            additionalProperties.put("fall", blockData.get("Fall"));
+            additionalProperties.put("flood", Float.parseFloat(blockData.get("Flood")));
+            additionalProperties.put("fall", Float.parseFloat(blockData.get("Fall")));
             break;
             case ELECTRIC:
-            additionalProperties.put("paralysis", blockData.get("Paralysis"));
+            additionalProperties.put("paralysis", Float.parseFloat(blockData.get("Paralysis")));
             break;
             default:
             break;
