@@ -1,0 +1,129 @@
+package INF3132.monsters;
+
+import java.util.Map;
+import java.util.ArrayList;
+
+import INF3132.monsters.subclasses.*;
+import INF3132.parser.exception.UnhandledMonsterTypeException;
+import INF3132.attacks.Attack;
+
+public class MonsterFactory {
+
+    private String name;
+    private MonsterType type;
+    private Map<String, Object> additionalProperties;
+    private int minHp;
+    private int maxHp;
+    private int minAttack;
+    private int maxAttack;
+    private int minDefense;
+    private int maxDefense;
+    private int minSpeed;
+    private int maxSpeed;
+
+    public MonsterFactory(
+        String name,
+        MonsterType type,
+        int minHp,
+        int maxHp,
+        int minAttack,
+        int maxAttack,
+        int minDefense,
+        int maxDefense,
+        int minSpeed,
+        int maxSpeed,
+        Map<String, Object> additionalProperties
+    ) {
+        this.name = name;
+        this.type = type;
+        this.minHp = minHp;
+        this.maxHp = maxHp;
+        this.minAttack = minAttack;
+        this.maxAttack = maxAttack;
+        this.minDefense = minDefense;
+        this.maxDefense = maxDefense;
+        this.minSpeed = minSpeed;
+        this.maxSpeed = maxSpeed;
+        this.additionalProperties = additionalProperties;
+    }
+
+    /**
+     * Return a subtype of {@link Monster} according to the {@code type} field.
+     * @see Monster.getType
+     */
+    public Monster create() throws UnhandledMonsterTypeException {
+        int hp = getStat(minHp, maxHp);
+        int attack = getStat(minAttack, maxAttack);
+        int defense = getStat(minDefense, maxDefense);
+        int speed = getStat(minSpeed, maxSpeed);
+
+        ArrayList<Attack> attacks = new ArrayList<>();
+
+        switch (type) {
+            case INSECT:
+            return new InsectMonster(name, hp, attack, defense, speed, attacks);
+            case ELECTRIC:
+            return new ElectricMonster(name, hp, attack, defense, speed, attacks, (float)additionalProperties.get("paralysis"));
+            case FIRE:
+            return new FireMonster(name, hp, attack, defense, speed, attacks);
+            case GRASS:
+            return new GrassMonster(name, hp, attack, defense, speed, attacks);
+            case GROUND:
+            return new GroundMonster(name, hp, attack, defense, speed, attacks);
+            case NORMAL:
+            return new NormalMonster(name, hp, attack, defense, speed, attacks);
+            case WATER:
+            return new WaterMonster(name, hp, attack, defense, speed, attacks, (float)additionalProperties.get("flood"), (float)additionalProperties.get("fall"));
+            default:
+            throw new UnhandledMonsterTypeException();
+        }
+    }
+
+    private static int getStat(int statMin, int statMax) {
+        return (int)Math.round(Math.random()* (statMax - statMin +1) + statMin);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public MonsterType getType() {
+        return type;
+    }
+
+    public Map<String, Object> getAdditionalProperties() {
+        return additionalProperties;
+    }
+
+    public int getMinHp() {
+        return minHp;
+    }
+
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    public int getMinAttack() {
+        return minAttack;
+    }
+
+    public int getMaxAttack() {
+        return maxAttack;
+    }
+
+    public int getMinDefense() {
+        return minDefense;
+    }
+
+    public int getMaxDefense() {
+        return maxDefense;
+    }
+
+    public int getMinSpeed() {
+        return minSpeed;
+    }
+
+    public int getMaxSpeed() {
+        return maxSpeed;
+    }
+}
