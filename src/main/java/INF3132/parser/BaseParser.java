@@ -29,10 +29,11 @@ public abstract class BaseParser<T> {
     protected Map<String, String> readBlock(String patternStart, String patternEnd) throws IOException {
         Map<String, String> blockData = new HashMap<>();
         String l;
-        while((l = reader.readLine()) != null){
+        while((l = reader.readLine()) != null) {
             l = l.trim();
+
             if(l.equals(patternStart)) {
-                while((l = reader.readLine()) != null){
+                while((l = reader.readLine()) != null) {
                     l = l.trim();
                     if(l.equals(patternEnd)) break;
 

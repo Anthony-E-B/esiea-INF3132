@@ -9,7 +9,7 @@ public class Combat {
 
     public EventPublisher<Integer> turnChanged;
 
-	private static Combat currentCombat = null;
+    private static Combat currentCombat = null;
 
     public Combat() {
         this.terrain =      new Terrain();
@@ -52,6 +52,6 @@ public class Combat {
     }
 
     public Terrain getTerrain() {
-		return terrain;
-	}
+        return terrain;
+    }
 }

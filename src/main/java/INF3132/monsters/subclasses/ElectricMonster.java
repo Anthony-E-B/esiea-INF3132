@@ -10,7 +10,15 @@ import INF3132.monsters.MonsterType;
 public class ElectricMonster extends Monster implements FloodAffectedMonster {
     float paralysis;
 
-    public ElectricMonster(String name, int hpMax, int attack, int defense, int speed, List<Attack> attacks , float paralysis) {
+    public ElectricMonster(
+        String name,
+        int hpMax,
+        int attack,
+        int defense,
+        int speed,
+        List<Attack> attacks,
+        float paralysis
+    ) {
         super(name, MonsterType.ELECTRIC, hpMax, attack, defense, speed, attacks);
         this.paralysis = paralysis;
     }

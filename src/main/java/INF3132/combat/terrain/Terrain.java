@@ -19,12 +19,12 @@ public class Terrain {
 
     public void onTurnChanged(Integer turn) {
         if (floodedRemainingTurns > 0)
-            floodedRemainingTurns -= 1;
+        floodedRemainingTurns -= 1;
     }
 
-	public boolean isFlooded() {
-		return floodedRemainingTurns > 0;
-	}
+    public boolean isFlooded() {
+        return floodedRemainingTurns > 0;
+    }
 
     /**
      * @return If the terrain is flooded, the {@link WaterMonster} responsible for the flood, null otherwise of if there are no flooder.

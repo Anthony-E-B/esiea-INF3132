@@ -117,11 +117,11 @@ public abstract class Monster {
         else                                avantage = 1.0f;
 
         float damage = (
-            (
-                (11 * m.getAttack() * a.getPower()) / (25 * getDefense())
-                + 2
-            ) * avantage * getRandomCoef()
-        );
+    (
+    (11 * m.getAttack() * a.getPower()) / (25 * getDefense())
+        + 2
+    ) * avantage * getRandomCoef()
+    );
 
         int roundedDamage = Math.round(damage);
 
@@ -271,19 +271,19 @@ public abstract class Monster {
         int power = p.use(this);
         switch (stat) {
             case HP:
-                this.hp = Math.min(this.hp + power, this.maxHp);
-                break;
+            this.hp = Math.min(this.hp + power, this.maxHp);
+            break;
             case ATTACK:
-                this.attack += power;
-                break;
+            this.attack += power;
+            break;
             case DEFENSE:
-                this.defense += power;
-                break;
+            this.defense += power;
+            break;
             case SPEED:
-                this.speed += power;
-                break;
+            this.speed += power;
+            break;
             default:
-                throw new UnusableItemException();
+            throw new UnusableItemException();
         }
     }
 }

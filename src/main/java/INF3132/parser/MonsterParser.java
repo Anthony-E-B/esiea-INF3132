@@ -24,7 +24,7 @@ public class MonsterParser extends BaseParser<Monster>{
     }
 
     @Override
-    protected Monster parseBlock(Map<String, String> blockData){
+    protected Monster parseBlock(Map<String, String> blockData) {
         Monster t;
         t = null;
         String name = blockData.get("Name");
@@ -128,7 +128,7 @@ public class MonsterParser extends BaseParser<Monster>{
         return t;
     }
 
-    private int getStat(int statMin, int statMax){
+    private int getStat(int statMin, int statMax) {
         return (int)Math.round(Math.random()* (statMax - statMin +1) + statMin);
     }
 }

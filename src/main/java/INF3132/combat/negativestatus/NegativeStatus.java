@@ -6,59 +6,59 @@ import INF3132.combat.Combat;
 
 public abstract class NegativeStatus {
 
-	private Monster monster;
-	private Combat combat;
+    private Monster monster;
+    private Combat combat;
 
-	private int triggeredAtTurn;
+    private int triggeredAtTurn;
 
-	public NegativeStatus(Monster m, Combat c) {
-		this.monster = m;
-		this.combat = c;
+    public NegativeStatus(Monster m, Combat c) {
+        this.monster = m;
+        this.combat = c;
 
-		this.triggeredAtTurn = c.getCurrentTurn();
-	}
+        this.triggeredAtTurn = c.getCurrentTurn();
+    }
 
-	/**
-	 * A hook method that should be called at the start of each turn of any
-	 * affected {@link Monster} on terrain.
-	 */
-	public void turnStartedHook() { }
+    /**
+     * A hook method that should be called at the start of each turn of any
+     * affected {@link Monster} on terrain.
+     */
+    public void turnStartedHook() { }
 
-	/**
-	 * A hook method that should be called at the end of each turn of any
-	 * affected {@link Monster} on terrain.
-	 */
-	public void turnEndedHook() { }
+    /**
+     * A hook method that should be called at the end of each turn of any
+     * affected {@link Monster} on terrain.
+     */
+    public void turnEndedHook() { }
 
-	/**
-	 * A hook method to trigger before doing an attack.
-	 */
-	public void beforeAttackHook() throws AttackFailedException { }
+    /**
+     * A hook method to trigger before doing an attack.
+     */
+    public void beforeAttackHook() throws AttackFailedException { }
 
-	/**
-	 * A hook method that should be called each time the affected monster attacks.
-	 */
-	public void attackedHook(float a) { }
+    /**
+     * A hook method that should be called each time the affected monster attacks.
+     */
+    public void attackedHook(float a) { }
 
-	/**
-	 * Know at which game turn the negative status appeared.
-	 *
-	 * @see Game
-	 * @see Game.getCurrentTurn
-	 */
-	public int getTriggeredAtTurn() {
-		return triggeredAtTurn;
-	}
+    /**
+     * Know at which game turn the negative status appeared.
+     *
+     * @see Game
+     * @see Game.getCurrentTurn
+     */
+    public int getTriggeredAtTurn() {
+        return triggeredAtTurn;
+    }
 
 
-	// GETTERS
+    // GETTERS
 
-	public Monster getMonster() {
-		return monster;
-	}
+    public Monster getMonster() {
+        return monster;
+    }
 
-	public Combat getCombat() {
-		return combat;
-	}
+    public Combat getCombat() {
+        return combat;
+    }
 }
 

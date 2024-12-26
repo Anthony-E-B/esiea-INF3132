@@ -11,7 +11,16 @@ public class WaterMonster extends Monster {
     private float flood;
     private float fall;
 
-    public WaterMonster(String name, int hpMax, int attack, int defense, int speed, List<Attack> attacks, float flood, float fall) {
+    public WaterMonster(
+        String name,
+        int hpMax,
+        int attack,
+        int defense,
+        int speed,
+        List<Attack> attacks,
+        float flood,
+        float fall
+    ) {
         super(name, MonsterType.WATER, hpMax, attack, defense, speed, attacks);
         this.flood = flood;
         this.fall = fall;
