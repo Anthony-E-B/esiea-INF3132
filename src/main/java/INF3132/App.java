@@ -79,6 +79,10 @@ public class App {
         Trainer t1 = new Trainer();
         Trainer t2 = new Trainer();
 
+        // Test Bag content
+        Bag b1 = t1.getBag();
+        b1.showItems();
+
         Trainer[] trainers = { t1, t2 };
 
         // Combat combat = Combat.initCombat(t1, t2);
