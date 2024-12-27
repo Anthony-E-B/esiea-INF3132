@@ -96,12 +96,5 @@ public class App {
                 }
             }
         }
-
-        // Test création d'un bag
-        Bag bag = new Bag();
-        bag.addItem(new Potion("Potion", 50, Stats.HP));
-        bag.addItem(new Potion("Super Potion", 100, Stats.HP));
-        bag.addItem(new Potion("Hyper Potion", 200, Stats.HP));
-        bag.showItems();
     }
 }
