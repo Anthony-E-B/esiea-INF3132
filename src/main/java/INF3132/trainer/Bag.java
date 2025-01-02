@@ -16,6 +16,10 @@ public class Bag {
         items.remove(item);
     }
 
+    public boolean itemIsOwn(Item i) {
+        return items.contains(i);
+    }
+
     public List<Item> getItems() {
         return items;
     }

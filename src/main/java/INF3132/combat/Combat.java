@@ -1,5 +1,6 @@
 package INF3132.combat;
 
+import INF3132.combat.exception.CombatLogicException;
 import INF3132.combat.terrain.Terrain;
 import INF3132.events.EventPublisher;
 import INF3132.trainer.Trainer;
@@ -11,6 +12,9 @@ public class Combat {
     public EventPublisher<Integer> turnChanged;
 
     private static Combat currentCombat = null;
+
+    private Monster player1fightingMonster;
+    private Monster player2fightingMonster;
 
     public Combat(Trainer t1, Trainer t2) {
         this.terrain =      new Terrain();
@@ -24,6 +28,10 @@ public class Combat {
 
     public void start() {
         Combat.currentCombat = this;
+
+        // try {
+        // } catch (CombatLogicException e) {
+        // }
     }
 
     public int getCurrentTurn() {
