@@ -13,9 +13,6 @@ public class Combat {
 
     private static Combat currentCombat = null;
 
-    private Monster player1fightingMonster;
-    private Monster player2fightingMonster;
-
     public Combat(Trainer t1, Trainer t2) {
         this.terrain =      new Terrain();
         this.turnChanged =  new EventPublisher<Integer>();
