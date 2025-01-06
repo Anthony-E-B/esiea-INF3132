@@ -81,5 +81,9 @@ public class Trainer {
 
         throw new TeamFullException();
     }
+
+    public List<Monster> getTeam() {
+        return team;
+    }
 }
 

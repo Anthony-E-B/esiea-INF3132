@@ -1,4 +1,60 @@
 Attack
+	Name	Charge
+	Type	Normal
+	Power	35
+	NbUse	15
+	Fail	0.03
+EndAttack
+
+Attack
+	Name	Bélier
+	Type	Normal
+	Power	65
+	NbUse	10
+	Fail	0.05
+EndAttack
+
+Attack
+	Name	Coud'boul
+	Type	Normal
+	Power	55
+	NbUse	20
+	Fail	0.08
+EndAttack
+
+Attack
+	Name	Ultralaser
+	Type	Normal
+	Power	115
+	NbUse	5
+	Fail	0.2
+EndAttack
+
+Attack
+	Name	GigaImpact
+	Type	Normal
+	Power	105
+	NbUse	5
+	Fail	0.15
+EndAttack
+
+Attack
+	Name	Griffe
+	Type	Normal
+	Power	45
+	NbUse	25
+	Fail	0.01
+EndAttack
+
+Attack
+	Name	Morsure
+	Type	Normal
+	Power	75
+	NbUse	10
+	Fail	0.04
+EndAttack
+
+Attack
 	Name	Eclair
 	Type	Electric
 	Power	40
@@ -7,9 +63,273 @@ Attack
 EndAttack
 
 Attack
-	Name	Charge
-	Type	Normal
-	Power	35
-	NbUse	15
-	Fail	0.03
+  Name	Etincelle
+  Type	Electric
+  Power	55
+  NbUse	20
+  Fail	0.06
+EndAttack
+
+Attack
+  Name	Tonnerre
+  Type	Electric
+  Power	85
+  NbUse	10
+  Fail	0.1
+EndAttack
+
+Attack
+  Name	FatalFoudre
+  Type	Electric
+  Power	100
+  NbUse	8
+  Fail	0.15
+EndAttack
+
+Attack
+  Name	ElecCanon
+  Type	Electric
+  Power	120
+  NbUse	5
+  Fail	0.2
+EndAttack
+
+Attack
+  Name	Flammèche
+  Type	Fire
+  Power	35
+  NbUse	30
+  Fail	0.03
+EndAttack
+
+Attack
+  Name	CrocsFeu
+  Type	Fire
+  Power	50
+  NbUse	20
+  Fail	0.05
+EndAttack
+
+Attack
+  Name	RoueDeFeu
+  Type	Fire
+  Power	75
+  NbUse	15
+  Fail	0.08
+EndAttack
+
+Attack
+  Name	LanceFlammes
+  Type	Fire
+  Power	90
+  NbUse	10
+  Fail	0.12
+EndAttack
+
+Attack
+  Name	Deflagration
+  Type	Fire
+  Power	110
+  NbUse	7
+  Fail	0.17
+EndAttack
+
+Attack
+  Name	Eruption
+  Type	Fire
+  Power	130
+  NbUse	5
+  Fail	0.22
+EndAttack
+
+Attack
+  Name	JetSable
+  Type	Ground
+  Power	30
+  NbUse	35
+  Fail	0.02
+EndAttack
+
+Attack
+  Name	CoupTerre
+  Type	Ground
+  Power	45
+  NbUse	25
+  Fail	0.05
+EndAttack
+
+Attack
+  Name	Tunnel
+  Type	Ground
+  Power	65
+  NbUse	15
+  Fail	0.07
+EndAttack
+
+Attack
+  Name	Telluriforce
+  Type	Ground
+  Power	85
+  NbUse	12
+  Fail	0.1
+EndAttack
+
+Attack
+  Name	Seisme
+  Type	Ground
+  Power	100
+  NbUse	8
+  Fail	0.15
+EndAttack
+
+Attack
+  Name	Abime
+  Type	Ground
+  Power	125
+  NbUse	5
+  Fail	0.25
+EndAttack
+
+Attack
+  Name	Pistolet
+  Type	Water
+  Power	35
+  NbUse	30
+  Fail	0.03
+EndAttack
+
+Attack
+  Name	Cascade
+  Type	Water
+  Power	50
+  NbUse	20
+  Fail	0.05
+EndAttack
+
+Attack
+  Name	Aquajet
+  Type	Water
+  Power	70
+  NbUse	15
+  Fail	0.08
+EndAttack
+
+Attack
+  Name	Surf
+  Type	Water
+  Power	90
+  NbUse	10
+  Fail	0.12
+EndAttack
+
+Attack
+  Name	Hydrocanon
+  Type	Water
+  Power	110
+  NbUse	7
+  Fail	0.18
+EndAttack
+
+Attack
+  Name	Tsunami
+  Type	Water
+  Power	125
+  NbUse	5
+  Fail	0.23
+EndAttack
+
+Attack
+  Name	Fouet
+  Type	Grass
+  Power	35
+  NbUse	30
+  Fail	0.03
+EndAttack
+
+Attack
+  Name	VolVie
+  Type	Grass
+  Power	55
+  NbUse	20
+  Fail	0.06
+EndAttack
+
+Attack
+  Name	TranchHerbe
+  Type	Grass
+  Power	75
+  NbUse	15
+  Fail	0.09
+EndAttack
+
+Attack
+  Name	LameFeuille
+  Type	Grass
+  Power	90
+  NbUse	10
+  Fail	0.13
+EndAttack
+
+Attack
+  Name	Tempeteverte
+  Type	Grass
+  Power	105
+  NbUse	8
+  Fail	0.17
+EndAttack
+
+Attack
+  Name	FloraBoom
+  Type	Grass
+  Power	120
+  NbUse	5
+  Fail	0.22
+EndAttack
+
+Attack
+  Name	Piqure
+  Type	Insect
+  Power	30
+  NbUse	35
+  Fail	0.02
+EndAttack
+
+Attack
+  Name	DardVenin
+  Type	Insect
+  Power	50
+  NbUse	20
+  Fail	0.05
+EndAttack
+
+Attack
+  Name	Taillade
+  Type	Insect
+  Power	70
+  NbUse	15
+  Fail	0.08
+EndAttack
+
+Attack
+  Name	Megacorne
+  Type	Insect
+  Power	85
+  NbUse	12
+  Fail	0.11
+EndAttack
+
+Attack
+  Name	Bourdon
+  Type	Insect
+  Power	100
+  NbUse	8
+  Fail	0.15
+EndAttack
+
+Attack
+  Name	Essaim
+  Type	Insect
+  Power	115
+  NbUse	6
+  Fail	0.2
 EndAttack

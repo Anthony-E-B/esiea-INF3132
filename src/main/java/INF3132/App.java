@@ -15,6 +15,7 @@ import INF3132.parser.MonsterParser;
 import INF3132.parser.PotionParser;
 import INF3132.parser.exception.UnhandledMonsterTypeException;
 import INF3132.trainer.Trainer;
+import INF3132.trainer.exception.TeamFullException;
 import INF3132.trainer.Bag;
 
 public class App {
@@ -39,7 +40,7 @@ public class App {
         }
 
         // Test chargement attaques
-        List<Attack> attackList;
+        List<Attack> attackList = new ArrayList<>();
         try {
             ap = new AttackParser("./attacks.txt");
             attackList = ap.parseFull("Attack", "EndAttack");
@@ -89,13 +90,22 @@ public class App {
                     trainer.addToTeam(
                         monsterFactories.get(
                             (int)Math.floor(Math.random()  * monsterFactories.size())
-                        ).create()
+                        ).create(attackList)
                     );
                 } catch (UnhandledMonsterTypeException e) {
+                    e.printStackTrace();
+                } catch (TeamFullException e) {
                     e.printStackTrace();
                 }
             }
         }
+
+        t1.getTeam().forEach(m -> {
+            System.out.println(m.getName());
+            m.getAttacks().forEach(a -> {
+                System.out.println(a.getName());
+            });
+        });
 
         // Test création d'un bag
         Bag bag = new Bag();

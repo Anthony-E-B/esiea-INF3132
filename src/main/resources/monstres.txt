@@ -9,6 +9,36 @@ Monster
 EndMonster
 
 Monster
+    Name        Voltorb
+    Type        Electric
+    HP          95 126
+    Attack      70 101
+    Speed       115 146
+    Defense     55 86
+    Paralysis   0.15
+EndMonster
+
+Monster
+    Name        Magnéti
+    Type        Electric
+    HP          75 120
+    Attack      90 130
+    Speed       85 105
+    Defense     120 140
+    Paralysis   0.15
+EndMonster
+
+Monster
+    Name        Elektek
+    Type        Electric
+    HP          105 136
+    Attack      85 116
+    Speed       105 136
+    Defense     65 96
+    Paralysis   0.18
+EndMonster
+
+Monster
     Name        Cerapuca
     Type        Water
     HP          119 150
@@ -17,4 +47,172 @@ Monster
     Defense     85 116
     Flood       0.25
     Fall        0.35
+EndMonster
+
+Monster
+    Name        Ptitard
+    Type        Water
+    HP          105 136
+    Attack      65 96
+    Speed       70 101
+    Defense     80 111
+    Flood       0.2
+    Fall        0.3
+EndMonster
+
+Monster
+    Name        Stari
+    Type        Water
+    HP          110 141
+    Attack      75 106
+    Speed       85 116
+    Defense     85 116
+    Flood       0.22
+    Fall        0.32
+EndMonster
+
+Monster
+    Name        Léviator
+    Type        Water
+    HP          125 156
+    Attack      85 126
+    Speed       75 105
+    Defense     90 101
+    Flood       0.28
+    Fall        0.38
+EndMonster
+
+Monster
+    Name        Salamèche
+    Type        Fire
+    HP          119 150
+    Attack      68 99
+    Speed       63 94
+    Defense     85 116
+EndMonster
+
+Monster
+    Name        Ponyta
+    Type        Fire
+    HP          100 131
+    Attack      90 121
+    Speed       95 126
+    Defense     65 96
+EndMonster
+
+Monster
+    Name        Magmar
+    Type        Fire
+    HP          110 141
+    Attack      95 126
+    Speed       85 116
+    Defense     70 101
+EndMonster
+
+Monster
+    Name        Rattata
+    Type        Normal
+    HP          95 126
+    Attack      85 116
+    Speed       90 121
+    Defense     60 91
+EndMonster
+
+Monster
+    Name        Miaouss
+    Type        Normal
+    HP          75 135
+    Attack      65 125
+    Speed       100 140
+    Defense     30 90
+EndMonster
+
+Monster
+    Name        Tauros
+    Type        Normal
+    HP          115 146
+    Attack      95 126
+    Speed       85 116
+    Defense     75 106
+EndMonster
+
+Monster
+    Name        Mysthèrbe
+    Type        Grass
+    HP          100 131
+    Attack      70 101
+    Speed       65 96
+    Defense     85 116
+EndMonster
+
+Monster
+    Name        Saqdenoeu
+    Type        Grass
+    HP          115 146
+    Attack      75 106
+    Speed       60 91
+    Defense     95 126
+EndMonster
+
+Monster
+    Name        Boustiflor
+    Type        Grass
+    HP          110 141
+    Attack      85 116
+    Speed       70 101
+    Defense     80 111
+EndMonster
+
+Monster
+    Name        Sablaireau
+    Type        Ground
+    HP          105 136
+    Attack      85 116
+    Speed       65 96
+    Defense     95 126
+EndMonster
+
+Monster
+    Name        Triopikeur
+    Type        Ground
+    HP          95 126
+    Attack      90 121
+    Speed       100 131
+    Defense     70 101
+EndMonster
+
+Monster
+    Name        Rhinocorne
+    Type        Ground
+    HP          120 151
+    Attack      100 131
+    Speed       55 86
+    Defense     105 136
+EndMonster
+
+Monster
+    Name        Chenipan
+    Type        Insect
+    HP          95 126
+    Attack      65 96
+    Speed       75 106
+    Defense     70 101
+EndMonster
+
+Monster
+    Name        Scarabrute
+    Type        Insect
+    HP          105 136
+    Attack      95 126
+    Speed       85 116
+    Defense     80 111
+EndMonster
+
+Monster
+    Name        Insécateur
+    Type        Insect
+    HP          110 141
+    Attack      90 121
+    Speed       95 126
+    Defense     75 106
 EndMonster
