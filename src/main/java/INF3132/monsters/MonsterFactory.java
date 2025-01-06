@@ -102,7 +102,9 @@ public class MonsterFactory {
             }
         }
 
-        for (int i = 0; i < 3; i++){
+        int attackPoolSize = 3;
+        if(attackPoolSize > sameTypeAttacks.size()) attackPoolSize = sameTypeAttacks.size();
+        for (int i = 0; i < attackPoolSize; i++){
             int index = (int)Math.floor(Math.random() * sameTypeAttacks.size());
             attacks.add(sameTypeAttacks.get(index));
             sameTypeAttacks.remove(index);
