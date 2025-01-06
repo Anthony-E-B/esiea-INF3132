@@ -3,18 +3,18 @@ package INF3132.parser;
 import java.io.IOException;
 import java.util.Map;
 
-import INF3132.attacks.Attack;
+import INF3132.attacks.AttackFactory;
 import INF3132.monsters.MonsterType;
 import INF3132.parser.exception.InvalidMonsterTypeException;
 
-public class AttackParser extends BaseParser<Attack> {
+public class AttackParser extends BaseParser<AttackFactory> {
 
     public AttackParser(String path) throws IOException {
         super(path);
     }
 
     @Override
-    protected Attack parseBlock(Map<String, String> blockData) {
+    protected AttackFactory parseBlock(Map<String, String> blockData) {
         String name = blockData.get("Name");
         MonsterType type = MonsterType.NORMAL;
 
@@ -29,12 +29,12 @@ public class AttackParser extends BaseParser<Attack> {
         int nbUse =     Integer.parseInt(blockData.get("NbUse"));
         float fail =    Float.parseFloat(blockData.get("Fail"));
 
-        return new Attack(
+        return new AttackFactory(
             name,
-            type,
             pwr,
             nbUse,
-            fail
+            fail,
+            type
         );
     }
 }

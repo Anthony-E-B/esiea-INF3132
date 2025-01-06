@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import INF3132.attacks.Attack;
+import INF3132.attacks.AttackFactory;
 import INF3132.items.Stats;
 import INF3132.items.subclasses.Medecine;
 import INF3132.items.subclasses.Potion;
@@ -40,12 +41,12 @@ public class App {
         }
 
         // Test chargement attaques
-        List<Attack> attackList = new ArrayList<>();
+        List<AttackFactory> attackList = new ArrayList<>();
         try {
             ap = new AttackParser("./attacks.txt");
             attackList = ap.parseFull("Attack", "EndAttack");
-            for (Attack a : attackList){
-                System.out.println(a.getName() + " - " +  a.getType());
+            for (AttackFactory af : attackList){
+                System.out.println(af.getName() + " - " +  af.getType());
             }
         } catch (IOException e) {
             e.printStackTrace();

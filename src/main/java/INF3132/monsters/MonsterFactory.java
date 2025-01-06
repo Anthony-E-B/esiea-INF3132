@@ -7,6 +7,7 @@ import java.util.List;
 import INF3132.monsters.subclasses.*;
 import INF3132.parser.exception.UnhandledMonsterTypeException;
 import INF3132.attacks.Attack;
+import INF3132.attacks.AttackFactory;
 
 public class MonsterFactory {
 
@@ -52,7 +53,7 @@ public class MonsterFactory {
      * Return a subtype of {@link Monster} according to the {@code type} field.
      * @see Monster.getType
      */
-    public Monster create(List<Attack> attackList) throws UnhandledMonsterTypeException {
+    public Monster create(List<AttackFactory> attackList) throws UnhandledMonsterTypeException {
         int hp = getStat(minHp, maxHp);
         int attack = getStat(minAttack, maxAttack);
         int defense = getStat(minDefense, maxDefense);
@@ -86,40 +87,42 @@ public class MonsterFactory {
      * @param attackList The list of all available attacks.
      * @return A list of 4 attacks.
      */
-    private ArrayList<Attack> generateMoveset(MonsterType type, List<Attack> attackList){
+    private ArrayList<Attack> generateMoveset(MonsterType type, List<AttackFactory> attackList){
         if (attackList == null || attackList.isEmpty()) {
             throw new IllegalArgumentException("La liste d'attaques ne peut pas être vide.");
         }
         ArrayList<Attack> attacks = new ArrayList<>();
-        ArrayList<Attack> attacksToAdd = new ArrayList<>();
+        ArrayList<Attack> attacksOfSameType = new ArrayList<>();
 
         // Logic is adding 3 attacks of the same type, and one normal move
-        for (Attack a : attackList){
-            if (a.getType() == type) attacksToAdd.add(a);
+        for (AttackFactory a : attackList){
+            if (a.getType() == type) attacksOfSameType.add(a.create());
         }
 
-        int attackPoolSize = 3;
-        if(attackPoolSize > attacksToAdd.size()) attackPoolSize = attacksToAdd.size();
-        for (int i = 0; i < attackPoolSize; i++){
-            int index = (int)Math.floor(Math.random() * attacksToAdd.size());
-            attacks.add(attacksToAdd.get(index));
-            attacksToAdd.remove(index);
+        int specialAttackPoolSize = 3;
+        if (attacksOfSameType.size() < specialAttackPoolSize) specialAttackPoolSize = attacksOfSameType.size();
+        for (int i = 0; i < specialAttackPoolSize; i++){
+            int index = (int)Math.floor(Math.random() * attacksOfSameType.size());
+            attacks.add(attacksOfSameType.get(index));
+            attacksOfSameType.remove(index);
         }
 
         ArrayList<Attack> normalAttacks = new ArrayList<>();
-        for (Attack a : attackList){
-            if (a.getType() == MonsterType.NORMAL) normalAttacks.add(a);
+        for (AttackFactory a : attackList){
+            if (a.getType() == MonsterType.NORMAL) normalAttacks.add(a.create());
         }
 
-        for (int j = 0; j < 4 - Math.min(attacksToAdd.size(), 3); j++){
-            attacks.add(normalAttacks.get(j));
-            normalAttacks.remove(j);
+        for (int j = 0; j < 4 - specialAttackPoolSize; j++){
+            int index = (int)Math.floor(Math.random() * normalAttacks.size());
+            attacks.add(normalAttacks.get(index));
+            normalAttacks.remove(index);
         }
+
         return attacks;
     }
 
     private static int getStat(int statMin, int statMax) {
-        return (int)Math.round(Math.random()* (statMax - statMin +1) + statMin);
+        return (int)Math.round(Math.random() * (statMax - statMin + 1) + statMin);
     }
 
     public String getName() {
