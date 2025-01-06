@@ -91,31 +91,30 @@ public class MonsterFactory {
             throw new IllegalArgumentException("La liste d'attaques ne peut pas être vide.");
         }
         ArrayList<Attack> attacks = new ArrayList<>();
-        ArrayList<Attack> sameTypeAttacks = new ArrayList<>();
-        for (Attack a : attackList){
-            if (a.getType() == type) sameTypeAttacks.add(a);
-        }
+        ArrayList<Attack> attacksToAdd = new ArrayList<>();
 
-        if (sameTypeAttacks.isEmpty()){
-            for (Attack a : attackList){
-                if (a.getType() == MonsterType.NORMAL) sameTypeAttacks.add(a);
-            }
+        // Logic is adding 3 attacks of the same type, and one normal move
+        for (Attack a : attackList){
+            if (a.getType() == type) attacksToAdd.add(a);
         }
 
         int attackPoolSize = 3;
-        if(attackPoolSize > sameTypeAttacks.size()) attackPoolSize = sameTypeAttacks.size();
+        if(attackPoolSize > attacksToAdd.size()) attackPoolSize = attacksToAdd.size();
         for (int i = 0; i < attackPoolSize; i++){
-            int index = (int)Math.floor(Math.random() * sameTypeAttacks.size());
-            attacks.add(sameTypeAttacks.get(index));
-            sameTypeAttacks.remove(index);
+            int index = (int)Math.floor(Math.random() * attacksToAdd.size());
+            attacks.add(attacksToAdd.get(index));
+            attacksToAdd.remove(index);
         }
 
         ArrayList<Attack> normalAttacks = new ArrayList<>();
         for (Attack a : attackList){
             if (a.getType() == MonsterType.NORMAL) normalAttacks.add(a);
         }
-        int index = (int)Math.floor(Math.random() * normalAttacks.size());
-        attacks.add(normalAttacks.get(index));
+
+        for (int j = 0; j < 4 - Math.min(attacksToAdd.size(), 3); j++){
+            attacks.add(normalAttacks.get(j));
+            normalAttacks.remove(j);
+        }
         return attacks;
     }
 
