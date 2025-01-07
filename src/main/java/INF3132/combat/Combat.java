@@ -1,6 +1,5 @@
 package INF3132.combat;
 
-import INF3132.combat.exception.CombatLogicException;
 import INF3132.combat.terrain.Terrain;
 import INF3132.events.EventPublisher;
 import INF3132.trainer.Trainer;
@@ -13,9 +12,15 @@ public class Combat {
 
     private static Combat currentCombat = null;
 
+    public Trainer t1;
+    public Trainer t2;
+
     public Combat(Trainer t1, Trainer t2) {
         this.terrain =      new Terrain();
         this.turnChanged =  new EventPublisher<Integer>();
+
+        this.t1 = t1;
+        this.t2 = t2;
     }
 
     // TODO: pour le mock, visibilité ou utilité de ce truc à revoir
@@ -24,11 +29,31 @@ public class Combat {
     }
 
     public void start() {
-        Combat.currentCombat = this;
+        t1.giveUp.addListener(ve -> onGiveUp(t1));
+        t1.giveUp.addListener(ve -> onGiveUp(t1));
 
         // try {
         // } catch (CombatLogicException e) {
         // }
+    }
+
+    /**
+     * Handle one of the player giving up.
+     * @param trainerGivingUp The trainer giving up combat.
+     */
+    public void onGiveUp(Trainer trainerGivingUp) {
+        sendMessage(String.format("%s abandonne !", trainerGivingUp.getName()));
+        if (trainerGivingUp == t1) setWinner(t2);
+        else setWinner(t1);
+    }
+
+    /**
+     * Defines the winner and ends combat.
+     * @param t The trainer who has won the combat.
+     */
+    public void setWinner(Trainer t) {
+        sendMessage(String.format("%s gagne le combat!", t.getName()), 4000);
+        Combat.currentCombat = null;
     }
 
     public int getCurrentTurn() {

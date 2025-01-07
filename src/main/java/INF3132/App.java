@@ -78,8 +78,8 @@ public class App {
         }
 
         // Initialize combat
-        Trainer t1 = new Trainer();
-        Trainer t2 = new Trainer();
+        Trainer t1 = new Trainer("Entraîneur 1");
+        Trainer t2 = new Trainer("Entraîneur 2");
 
         Trainer[] trainers = { t1, t2 };
 
