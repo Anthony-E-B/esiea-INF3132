@@ -13,10 +13,10 @@ public class Medecine extends Consumable {
     }
 
     @Override
-    public int use(Monster m) throws UnusableItemException {
-        if(checkIfUsable(m)){
-            this.setUsed(true);
-            return 1;
+    public void use(Monster m) throws UnusableItemException {
+        if (checkIfUsable(m)){
+            setUsed(true);
+            m.setStatus(null);
         } else throw new UnusableItemException();
     }
 

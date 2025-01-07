@@ -79,6 +79,7 @@ public abstract class Monster {
         this.speed = speed;
         this.attacks = attacks;
         this.status = status;
+        this.hp = maxHp;
     }
 
     /**
@@ -134,6 +135,37 @@ public abstract class Monster {
      */
     public void inflictDamage(int damage) {
         setHp(getHp() - Math.min(hp, damage));
+    }
+
+    /**
+     * Restores health up to the maximum amount.
+     */
+    public void restoreHealth(int power) {
+        setHp(Math.min(getMaxHp(), getHp() + power));
+    }
+
+    /**
+     * Increase the attack points.
+     * @implNote uncapped.
+     */
+    public void improveAttack(int amount) {
+        attack += amount;
+    }
+
+    /**
+     * Increase the attack points.
+     * @implNote uncapped.
+     */
+    public void improveDefense(int amount) {
+        defense += amount;
+    }
+
+    /**
+     * Increase the attack points.
+     * @implNote uncapped.
+     */
+    public void improveSpeed(int amount) {
+        speed += amount;
     }
 
     public static final float COEF_MIN = 0.85f;
@@ -259,6 +291,10 @@ public abstract class Monster {
     // Status
     public Status getStatus() {
         return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     // Type
