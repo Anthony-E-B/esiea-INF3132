@@ -30,7 +30,7 @@ public class Combat {
 
     public void start() {
         t1.giveUp.addListener(ve -> onGiveUp(t1));
-        t1.giveUp.addListener(ve -> onGiveUp(t1));
+        t2.giveUp.addListener(ve -> onGiveUp(t2));
 
         // try {
         // } catch (CombatLogicException e) {
