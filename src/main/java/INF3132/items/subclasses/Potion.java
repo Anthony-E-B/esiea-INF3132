@@ -15,17 +15,41 @@ public class Potion extends Consumable {
     }
 
     @Override
-    public int use(Monster m) throws UnusableItemException {
+    public void use(Monster m) throws UnusableItemException {
         if(checkIfUsable(m)){
-            this.setUsed(true);
-            return this.itemPower;
+            setUsed(true);
+
+            switch (getStatAffected()) {
+                case HP:
+                m.restoreHealth(getItemPower());
+                break;
+                case ATTACK:
+                m.improveAttack(getItemPower());
+                break;
+                case DEFENSE:
+                m.improveDefense(getItemPower());
+                break;
+                case SPEED:
+                m.improveSpeed(getItemPower());
+                break;
+            }
         } else throw new UnusableItemException();
     }
 
     @Override
     public boolean checkIfUsable(Monster m) {
-        // TODO Implémenter une vérification pour savoir si l'objet est utilisable en l'état ou non
-        return true;
+        if (isUsed()) return false;
+
+        switch (getStatAffected()) {
+            case HP:
+            return m.getHp() < m.getMaxHp();
+            // TODO: cap those
+            case ATTACK:
+            case DEFENSE:
+            case SPEED:
+            default:
+            return true;
+        }
     }
 
     public Stats getStatAffected() {

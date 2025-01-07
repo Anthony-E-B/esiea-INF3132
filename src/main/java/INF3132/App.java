@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import INF3132.attacks.Attack;
 import INF3132.attacks.AttackFactory;
 import INF3132.items.Stats;
+import INF3132.items.exception.UnusableItemException;
 import INF3132.items.subclasses.Medecine;
 import INF3132.items.subclasses.Potion;
+import INF3132.monsters.Monster;
 import INF3132.monsters.MonsterFactory;
+import INF3132.monsters.Status;
 import INF3132.parser.AttackParser;
 import INF3132.parser.MedecineParser;
 import INF3132.parser.MonsterParser;
@@ -41,11 +44,11 @@ public class App {
         }
 
         // Test chargement attaques
-        List<AttackFactory> attackList = new ArrayList<>();
+        List<AttackFactory> attackFactories = new ArrayList<>();
         try {
             ap = new AttackParser("./attacks.txt");
-            attackList = ap.parseFull("Attack", "EndAttack");
-            for (AttackFactory af : attackList){
+            attackFactories = ap.parseFull("Attack", "EndAttack");
+            for (AttackFactory af : attackFactories){
                 System.out.println(af.getName() + " - " +  af.getType());
             }
         } catch (IOException e) {
@@ -91,7 +94,7 @@ public class App {
                     trainer.addToTeam(
                         monsterFactories.get(
                             (int)Math.floor(Math.random()  * monsterFactories.size())
-                        ).create(attackList)
+                        ).create(attackFactories)
                     );
                 } catch (UnhandledMonsterTypeException e) {
                     e.printStackTrace();
@@ -114,5 +117,32 @@ public class App {
         bag.addItem(new Potion("Super Potion", 100, Stats.HP));
         bag.addItem(new Potion("Hyper Potion", 200, Stats.HP));
         bag.showItems();
+
+        // Medicines test
+        //
+        try {
+            System.out.println("Monster medication test");
+
+            // Potion
+            System.out.println("Potion : ");
+            Monster monsterToMedicate = monsterFactories.get((int)(Math.floor(Math.random() * monsterFactories.size()))).create(attackFactories);
+            System.out.print(String.format("Original HP : %d\t", monsterToMedicate.getHp()));
+            monsterToMedicate.inflictDamage(20);
+            System.out.print(String.format("HP after dmg : %d\t", monsterToMedicate.getHp()));
+            Potion p = new Potion("HP", 15, Stats.HP);
+            p.use(monsterToMedicate);
+            System.out.print(String.format("HP after relieving 15 : %d\n", monsterToMedicate.getHp()));
+
+            // Burned
+            System.out.println("Burned medicine : ");
+            Medecine m = new Medecine("Anti brûlure", Status.BURNED);
+            System.out.print("Original status : " + monsterToMedicate.getStatus() + " \t");
+            monsterToMedicate.setStatus(Status.BURNED);
+            System.out.print("Burned status : " + monsterToMedicate.getStatus() + " \t");
+            m.use(monsterToMedicate);
+            System.out.print("After medication : " + monsterToMedicate.getStatus() + " \t");
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 }
