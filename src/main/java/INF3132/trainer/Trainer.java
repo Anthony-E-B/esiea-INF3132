@@ -8,17 +8,29 @@ import INF3132.monsters.exception.UnownedMonsterException;
 import INF3132.monsters.exception.MonsterUnableToFightException;
 import INF3132.attacks.Attack;
 import INF3132.attacks.exception.AttackFailedException;
+import INF3132.combat.Combat;
+import INF3132.events.EventPublisher;
+import INF3132.events.VoidEvent;
 import INF3132.items.exception.UnownedItemException;
 import INF3132.items.exception.UnusableItemException;
 import INF3132.items.subclasses.Consumable;
+import INF3132.trainer.exception.NoCurrentCombat;
 import INF3132.trainer.exception.TeamFullException;
 
 public class Trainer {
     public static final int TEAM_MAX_SIZE = 6;
 
-    List<Monster> team = new ArrayList<Monster>();
-    Bag bag;
-    Monster currentFightingMonster = null;
+    public EventPublisher<VoidEvent> giveUp;
+
+    private List<Monster> team = new ArrayList<Monster>();
+    private Bag bag;
+    private Monster currentFightingMonster = null;
+
+    private String name;
+
+	public Trainer(String name) {
+        this.name = name;
+    }
 
     /**
      * Use a consumable on a monster
@@ -59,6 +71,10 @@ public class Trainer {
         currentFightingMonster = m;
     }
 
+    public void giveUp() {
+        giveUp.notifyListeners(new VoidEvent());
+    }
+
     /**
      * Check if monster {@param m} is owned by this {@link Trainer}
      * @param m The monster to check ownership of.
@@ -85,5 +101,14 @@ public class Trainer {
     public List<Monster> getTeam() {
         return team;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }
 
