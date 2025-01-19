@@ -4,10 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
-import INF3132.attacks.Attack;
 import INF3132.attacks.AttackFactory;
 import INF3132.items.Stats;
-import INF3132.items.exception.UnusableItemException;
 import INF3132.items.subclasses.Medecine;
 import INF3132.items.subclasses.Potion;
 import INF3132.monsters.Monster;
@@ -20,6 +18,8 @@ import INF3132.parser.PotionParser;
 import INF3132.parser.exception.UnhandledMonsterTypeException;
 import INF3132.trainer.Trainer;
 import INF3132.trainer.exception.TeamFullException;
+import INF3132.ui.Menu;
+import INF3132.ui.MenuItem;
 import INF3132.trainer.Bag;
 
 public class App {
@@ -144,5 +144,14 @@ public class App {
         } catch (Throwable e) {
             e.printStackTrace();
         }
+
+        MenuItem[] items2 = { new MenuItem("Test 2") };
+        Menu menu2 = new Menu(items2);
+
+        MenuItem[] items = { new MenuItem("Test 1", menu2) };
+        Menu testMenu = new Menu(items);
+        menu2.setParent(testMenu);
+
+        testMenu.prompt();
     }
 }
