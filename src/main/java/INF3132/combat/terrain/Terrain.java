@@ -12,8 +12,8 @@ public class Terrain {
 
     private final Combat combat;
 
-    public Terrain() {
-        combat = Combat.getCurrentCombat();
+    public Terrain(Combat combat) {
+        this.combat = combat;
         combat.turnChanged.addListener(t -> onTurnChanged(t));
     }
 
