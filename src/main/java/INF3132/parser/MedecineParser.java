@@ -3,17 +3,17 @@ package INF3132.parser;
 import java.io.IOException;
 import java.util.Map;
 
-import INF3132.items.subclasses.Medecine;
+import INF3132.items.subclasses.MedecineFactory;
 import INF3132.monsters.Status;
 
-public class MedecineParser extends BaseParser<Medecine> {
+public class MedecineParser extends BaseParser<MedecineFactory> {
 
     public MedecineParser(String path) throws IOException {
         super(path);
     }
 
     @Override
-    protected Medecine parseBlock(Map<String, String> blockData) {
+    protected MedecineFactory parseBlock(Map<String, String> blockData) {
         String name = blockData.get("Name");
         Status status = null;
         String statusStr = blockData.get("Status");
@@ -25,6 +25,6 @@ public class MedecineParser extends BaseParser<Medecine> {
             System.err.println("Erreur lors de la création des médicaments");
         }
 
-        return new Medecine(name, status);
+        return new MedecineFactory(name, status);
     }
 }

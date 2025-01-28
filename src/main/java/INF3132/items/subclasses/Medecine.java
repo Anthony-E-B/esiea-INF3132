@@ -7,7 +7,7 @@ import INF3132.monsters.Status;
 public class Medecine extends Consumable {
     private Status status;
 
-    public Medecine(String name, Status status){
+    public Medecine(String name, Status status) {
         super(name);
         this.status = status;
     }

@@ -7,22 +7,16 @@ import java.util.ArrayList;
 
 import INF3132.attacks.AttackFactory;
 import INF3132.combat.Combat;
-import INF3132.items.Stats;
-import INF3132.items.subclasses.Medecine;
-import INF3132.items.subclasses.Potion;
-import INF3132.monsters.Monster;
+import INF3132.items.subclasses.MedecineFactory;
+import INF3132.items.subclasses.PotionFactory;
 import INF3132.monsters.MonsterFactory;
-import INF3132.monsters.Status;
 import INF3132.parser.AttackParser;
 import INF3132.parser.MedecineParser;
 import INF3132.parser.MonsterParser;
 import INF3132.parser.PotionParser;
-import INF3132.parser.exception.UnhandledMonsterTypeException;
 import INF3132.trainer.Trainer;
-import INF3132.trainer.exception.TeamFullException;
 import INF3132.ui.Menu;
 import INF3132.ui.MenuItem;
-import INF3132.trainer.Bag;
 
 public class App {
     public static MonsterFactory[] monsterFactories;
@@ -65,7 +59,7 @@ public class App {
         // TODO: passer en factories !
         try {
             pp = new PotionParser("./potions.txt");
-            List<Potion> potionList = pp.parseFull("Potion", "EndPotion");
+            List<PotionFactory> potionList = pp.parseFull("Potion", "EndPotion");
             System.out.println(String.format("\r%d définitions de potions chargées.", potionList.size()));
         } catch (IOException e) {
             e.printStackTrace();
@@ -75,7 +69,7 @@ public class App {
         // Loading medecines
         try {
             mep = new MedecineParser("./medecines.txt");
-            List<Medecine> medicineList = mep.parseFull("Medecine", "EndMedecine");
+            List<MedecineFactory> medicineList = mep.parseFull("Medecine", "EndMedecine");
             System.out.println(String.format("\r%d définitions de médicaments chargées.", medicineList.size()));
         } catch (IOException e) {
             e.printStackTrace();
@@ -232,7 +226,7 @@ public class App {
         scanner.close();
 
         // Starting the game
-        Combat c = Combat.initCombat(trainer2, trainer2);
+        Combat c = Combat.initCombat(trainer1, trainer2);
         c.start();
     }
 }

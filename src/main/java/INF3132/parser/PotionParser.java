@@ -4,16 +4,16 @@ import java.io.IOException;
 import java.util.Map;
 
 import INF3132.items.Stats;
-import INF3132.items.subclasses.Potion;
+import INF3132.items.subclasses.PotionFactory;
 
-public class PotionParser extends BaseParser<Potion> {
+public class PotionParser extends BaseParser<PotionFactory> {
 
     public PotionParser(String path) throws IOException {
         super(path);
     }
 
     @Override
-    protected Potion parseBlock(Map<String, String> blockData) {
+    protected PotionFactory parseBlock(Map<String, String> blockData) {
         String name = blockData.get("Name");
         Stats statAffected = null;
         String statStr = blockData.get("StatAffected");
@@ -22,7 +22,7 @@ public class PotionParser extends BaseParser<Potion> {
             statAffected = Stats.valueOf(statStr.toUpperCase());
         } catch (RuntimeException e) {
             e.printStackTrace();
-            System.err.println("Erreur lors de la création des objets (StatAffected invalide)");
+            System.err.println(String.format("Erreur lors de la création de la potion %s (StatAffected invalide)", name));
         }
 
         int itemPower = 0;
@@ -32,9 +32,9 @@ public class PotionParser extends BaseParser<Potion> {
             itemPower = Integer.parseInt(itemPowStr);
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            System.err.println("Erreur lors de la création des objets (ItemPower invalide)");
+            System.err.println(String.format("Erreur lors de la création de la potion %s (ItemPower invalide)", name));
         }
 
-        return new Potion(name, itemPower, statAffected);
+        return new PotionFactory(name, itemPower, statAffected);
     }
 }
