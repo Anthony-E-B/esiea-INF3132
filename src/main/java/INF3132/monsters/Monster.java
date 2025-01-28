@@ -303,7 +303,7 @@ public abstract class Monster {
     }
 
     public void drinkPotion(Potion p) throws UnusableItemException {
-        Stats stat = p.getStatAffected();
+        Stats stat = p.getAffectedStat();
         int power = p.use(this);
         switch (stat) {
             case HP:

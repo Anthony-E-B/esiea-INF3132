@@ -6,12 +6,12 @@ import INF3132.monsters.Monster;
 
 public class Potion extends Consumable {
     private int itemPower;
-    private Stats statAffected;
+    private Stats affectedStat;
 
-    public Potion(String name, int itemPower, Stats statAffected) {
+    public Potion(String name, int itemPower, Stats affectedStat) {
         super(name);
         this.itemPower = itemPower;
-        this.statAffected = statAffected;
+        this.affectedStat = affectedStat;
     }
 
     @Override
@@ -19,7 +19,7 @@ public class Potion extends Consumable {
         if(checkIfUsable(m)){
             setUsed(true);
 
-            switch (getStatAffected()) {
+            switch (getAffectedStat()) {
                 case HP:
                 m.restoreHealth(getItemPower());
                 break;
@@ -40,7 +40,7 @@ public class Potion extends Consumable {
     public boolean checkIfUsable(Monster m) {
         if (isUsed()) return false;
 
-        switch (getStatAffected()) {
+        switch (getAffectedStat()) {
             case HP:
             return m.getHp() < m.getMaxHp();
             // TODO: cap those
@@ -52,8 +52,8 @@ public class Potion extends Consumable {
         }
     }
 
-    public Stats getStatAffected() {
-        return this.statAffected;
+    public Stats getAffectedStat() {
+        return this.affectedStat;
     }
 
     public int getItemPower() {

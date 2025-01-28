@@ -12,13 +12,16 @@ public class Menu {
     public Menu parent;
     public MenuItem[] items;
 
-    private Scanner scanner;
+    protected String name;
 
-    public Menu(MenuItem[] items) {
-        this(items, null);
+	private Scanner scanner;
+
+    public Menu(String name, MenuItem[] items) {
+        this(name, items, null);
     }
 
-    public Menu(MenuItem[] items, Menu parent) {
+    public Menu(String name, MenuItem[] items, Menu parent) {
+        this.name = name;
         this.items = items;
         this.parent = parent;
         this.scanner = new Scanner(System.in);
@@ -44,6 +47,10 @@ public class Menu {
 
     public void setParent(Menu parent) {
         this.parent = parent;
+    }
+
+    public void setItems(MenuItem[] items) {
+        this.items = items;
     }
 
     protected InputType determineInputType(String userInput) {
@@ -91,5 +98,13 @@ public class Menu {
         default: break;
         }
     }
+
+    public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }
 
