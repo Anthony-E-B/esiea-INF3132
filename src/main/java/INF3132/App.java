@@ -14,6 +14,7 @@ import INF3132.parser.AttackParser;
 import INF3132.parser.MedecineParser;
 import INF3132.parser.MonsterParser;
 import INF3132.parser.PotionParser;
+import INF3132.trainer.Bag;
 import INF3132.trainer.Trainer;
 import INF3132.ui.Menu;
 import INF3132.ui.MenuItem;
@@ -21,6 +22,8 @@ import INF3132.ui.MenuItem;
 public class App {
     public static MonsterFactory[] monsterFactories;
     public static AttackFactory[] attackFactories;
+    public static List<PotionFactory> potionFactories;
+    public static List<MedecineFactory> medecineFactories;
 
     public static void main(String[] args) {
         MonsterParser mp;
@@ -57,20 +60,23 @@ public class App {
         }
 
         // TODO: passer en factories !
+        System.out.print("Chargement des Potions...                     ");
+        // Loading potions
         try {
             pp = new PotionParser("./potions.txt");
-            List<PotionFactory> potionList = pp.parseFull("Potion", "EndPotion");
-            System.out.println(String.format("\r%d définitions de potions chargées.", potionList.size()));
+            App.potionFactories = pp.parseFull("Potion", "EndPotion");
+            System.out.println(String.format("\r%d définitions de potions chargées.", potionFactories.size()));
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("\rErreur lors du chargement du fichier de potions !");
         }
 
+        System.out.print("Chargement des Médicaments...                     ");
         // Loading medecines
         try {
             mep = new MedecineParser("./medecines.txt");
-            List<MedecineFactory> medicineList = mep.parseFull("Medecine", "EndMedecine");
-            System.out.println(String.format("\r%d définitions de médicaments chargées.", medicineList.size()));
+            App.medecineFactories = mep.parseFull("Medecine", "EndMedecine");
+            System.out.println(String.format("\r%d définitions de médicaments chargées.", medecineFactories.size()));
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Erreurs lors du chargement du fichier des médicaments !");
@@ -222,6 +228,24 @@ public class App {
             trainer2name = scanner.nextLine();
         } while (trainer2name.trim().length() == 0);
         Trainer trainer2 = new Trainer(trainer2name);
+
+        // Bag Initialization
+        int potionCount = (int)(Math.floor(Math.random() * 3) + 3);
+        int medecineCount = (int)(Math.floor(Math.random() * 3) + 1);
+        Bag bag1 = new Bag();
+        Bag bag2 = new Bag();
+        for (int i = 0; i < potionCount; i++) {
+            PotionFactory potionFactory = potionFactories.get((int)(Math.floor(Math.random() * potionFactories.size())));
+            bag1.addItem(potionFactory.create());
+            bag2.addItem(potionFactory.create());
+        }
+        for (int i = 0; i < medecineCount; i++) {
+            MedecineFactory medecine = medecineFactories.get((int)(Math.floor(Math.random() * medecineFactories.size())));
+            bag1.addItem(medecine.create());
+            bag2.addItem(medecine.create());
+        }
+        trainer1.setBag(bag1);
+        trainer2.setBag(bag2);
 
         scanner.close();
 
