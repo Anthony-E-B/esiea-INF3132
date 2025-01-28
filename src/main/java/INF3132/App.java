@@ -30,7 +30,7 @@ public class App {
         PotionParser pp;
         MedecineParser mep;
 
-        // Test chargement monstres
+        // Loads Monsters
         List<MonsterFactory> monsterFactories = new ArrayList<>();
         try {
             mp = new MonsterParser("./monstres.txt");
@@ -43,7 +43,7 @@ public class App {
             System.err.println("Erreur lors du chargement de fichier de monstres !");
         }
 
-        // Test chargement attaques
+        // Loads Attacks
         List<AttackFactory> attackFactories = new ArrayList<>();
         try {
             ap = new AttackParser("./attacks.txt");
@@ -56,7 +56,7 @@ public class App {
             System.err.println("Erreur lors du chargement du fichier d'attaques !");
         }
 
-        // Test chargement potions
+        // Loads Potions
         try {
             pp = new PotionParser("./potions.txt");
             List<Potion> potionList = pp.parseFull("Potion", "EndPotion");
@@ -68,7 +68,7 @@ public class App {
             System.err.println("Erreur lors du chargement du fichier de potions !");
         }
 
-        // Test chargement des médicaments
+        // Loads Medecines
         try {
             mep = new MedecineParser("./medecines.txt");
             List<Medecine> medicineList = mep.parseFull("Medecine", "EndMedecine");
@@ -111,7 +111,7 @@ public class App {
             });
         });
 
-        // Test création d'un bag
+        // Bag Initialization
         Bag bag = new Bag();
         bag.addItem(new Potion("Potion", 50, Stats.HP));
         bag.addItem(new Potion("Super Potion", 100, Stats.HP));
