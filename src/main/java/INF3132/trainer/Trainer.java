@@ -201,5 +201,9 @@ public class Trainer {
         return currentFightingMonster;
     }
 
+    public void setBag(Bag bag) {
+        this.bag = bag;
+    }
+
 }
 
