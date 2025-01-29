@@ -240,7 +240,7 @@ EndAttack
 
 Attack
   Name	Fouet
-  Type	Grass
+  Type	Nature
   Power	35
   NbUse	30
   Fail	0.03
@@ -248,7 +248,7 @@ EndAttack
 
 Attack
   Name	VolVie
-  Type	Grass
+  Type	Nature
   Power	55
   NbUse	20
   Fail	0.06
@@ -256,7 +256,7 @@ EndAttack
 
 Attack
   Name	TranchHerbe
-  Type	Grass
+  Type	Nature
   Power	75
   NbUse	15
   Fail	0.09
@@ -264,7 +264,7 @@ EndAttack
 
 Attack
   Name	LameFeuille
-  Type	Grass
+  Type	Nature
   Power	90
   NbUse	10
   Fail	0.13
@@ -272,7 +272,7 @@ EndAttack
 
 Attack
   Name	Tempeteverte
-  Type	Grass
+  Type	Nature
   Power	105
   NbUse	8
   Fail	0.17
@@ -280,7 +280,7 @@ EndAttack
 
 Attack
   Name	FloraBoom
-  Type	Grass
+  Type	Nature
   Power	120
   NbUse	5
   Fail	0.22
@@ -288,7 +288,7 @@ EndAttack
 
 Attack
   Name	Piqure
-  Type	Insect
+  Type	Nature
   Power	30
   NbUse	35
   Fail	0.02
@@ -296,7 +296,7 @@ EndAttack
 
 Attack
   Name	DardVenin
-  Type	Insect
+  Type	Nature
   Power	50
   NbUse	20
   Fail	0.05
@@ -304,7 +304,7 @@ EndAttack
 
 Attack
   Name	Taillade
-  Type	Insect
+  Type	Nature
   Power	70
   NbUse	15
   Fail	0.08
@@ -312,7 +312,7 @@ EndAttack
 
 Attack
   Name	Megacorne
-  Type	Insect
+  Type	Nature
   Power	85
   NbUse	12
   Fail	0.11
@@ -320,7 +320,7 @@ EndAttack
 
 Attack
   Name	Bourdon
-  Type	Insect
+  Type	Nature
   Power	100
   NbUse	8
   Fail	0.15
@@ -328,7 +328,7 @@ EndAttack
 
 Attack
   Name	Essaim
-  Type	Insect
+  Type	Nature
   Power	115
   NbUse	6
   Fail	0.2
