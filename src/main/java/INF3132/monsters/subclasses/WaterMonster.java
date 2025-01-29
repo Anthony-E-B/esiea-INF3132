@@ -3,6 +3,7 @@ package INF3132.monsters.subclasses;
 import java.util.List;
 
 import INF3132.attacks.Attack;
+import INF3132.attacks.AttackType;
 import INF3132.combat.Combat;
 import INF3132.monsters.Monster;
 import INF3132.monsters.MonsterType;
@@ -35,7 +36,7 @@ public class WaterMonster extends Monster {
     public void afterAttack(float inflictedDamage, Attack a) {
         super.afterAttack(inflictedDamage, a);
 
-        if (a == null || a.getType() != MonsterType.WATER) return;
+        if (a == null || a.getType() != AttackType.WATER) return;
 
         // 1/4 odd of flooding the terrain
         if ((float)Math.random() <= flood) {
