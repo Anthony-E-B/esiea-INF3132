@@ -98,9 +98,16 @@ public abstract class Monster {
      */
     public int receiveAttack(Monster m) {
         float damage = 20 * (m.getAttack() / getDefense()) * Monster.getRandomCoef();
+        Combat combat = Combat.getCurrentCombat();
 
-        if (m.getType() == weakType) damage *= 2;
-        else if (m.getType() == strongType) damage /= 2;
+        if (m.getType() == weakType) {
+            damage *= 2;
+            combat.sendMessage("C'est super efficace !");
+        }
+        else if (m.getType() == strongType) {
+            damage /= 2;
+            combat.sendMessage("Ce n'est pas très efficace...");
+        }
 
         int roundedDamage = Math.round(damage);
 
@@ -120,10 +127,19 @@ public abstract class Monster {
     public int receiveAttack(Monster m, Attack a) {
         float avantage;
         MonsterType attackType = a.getType();
+        Combat combat = Combat.getCurrentCombat();
 
-        if (attackType == weakType)         avantage = 0.5f;
-        else if (attackType == strongType)  avantage = 2.0f;
-        else                                avantage = 1.0f;
+        if (attackType == weakType) {
+            avantage = 0.5f;
+            combat.sendMessage("Ce n'est pas très efficace...");
+        }
+        else if (attackType == strongType) {
+            avantage = 2.0f;
+            combat.sendMessage("C'est super efficace !");
+        }
+        else {
+            avantage = 1.0f;
+        }
 
         float damage = (
             ((11 * m.getAttack() * a.getPower()) / (25 * getDefense()) + 2)

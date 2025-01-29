@@ -130,6 +130,9 @@ public class Trainer {
      * @param target The {@link Monster} to attack.
      */
     public void orderMonsterToAttack(Monster source, Monster target) {
+        Combat combat = Combat.getCurrentCombat();
+        combat.sendMessage(String.format("%s charge %s !", source.getName(), target.getName()));
+
         try {
             int inflictedDamage = source.attack(target);
             Combat.getCurrentCombat().sendMessage(String.format("%s inflige %d de dommages à %s.", source.getName(), inflictedDamage, target.getName()));
@@ -157,11 +160,14 @@ public class Trainer {
      * Order a Monster to attack with {@link Attack} {@param a}
      * @param source The {@link Monster} to command.
      * @param target The {@link Monster} to attack.
-     * @param a The {@link Attack} to use.
+     * @param attack The {@link Attack} to use.
      */
-    public void orderMonsterToAttack(Monster source, Monster target, Attack a) {
+    public void orderMonsterToAttack(Monster source, Monster target, Attack attack) {
+        Combat combat = Combat.getCurrentCombat();
+        combat.sendMessage(String.format("%s attaque %s avec %s !", source.getName(), target.getName(), attack.getName()));
+
         try {
-            int inflictedDamage = source.attack(target, a);
+            int inflictedDamage = source.attack(target, attack);
             Combat.getCurrentCombat().sendMessage(String.format("%s inflige %d de dommages à %s.", source.getName(), inflictedDamage, target.getName()));
         } catch (SlippedAndFailedException e) {
             Combat.getCurrentCombat().sendMessage(
