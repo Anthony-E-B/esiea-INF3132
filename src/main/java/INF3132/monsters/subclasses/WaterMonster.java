@@ -27,10 +27,15 @@ public class WaterMonster extends Monster {
     }
 
     @Override
+    public void afterAttack(float inflictedDamage) {
+        this.afterAttack(inflictedDamage, null);
+    }
+
+    @Override
     public void afterAttack(float inflictedDamage, Attack a) {
         super.afterAttack(inflictedDamage, a);
 
-        if (a.getType() != MonsterType.WATER) return;
+        if (a == null || a.getType() != MonsterType.WATER) return;
 
         // 1/4 odd of flooding the terrain
         if ((float)Math.random() <= flood) {

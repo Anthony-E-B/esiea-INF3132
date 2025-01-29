@@ -68,6 +68,17 @@ public class Combat {
     public void start() {
         t1.giveUp.addListener(ve -> onGiveUp(t1));
         t2.giveUp.addListener(ve -> onGiveUp(t2));
+
+        t1.turnEnded.addListener(ve -> nextTurn());
+        t2.turnEnded.addListener(ve -> nextTurn());
+
+        sendMessage(String.format(
+            "%s et %s veulent se battre !",
+            t1.getName(),
+            t2.getName()
+        ));
+
+        t1.playTurn();
     }
 
     /**
@@ -87,6 +98,7 @@ public class Combat {
     public void setWinner(Trainer t) {
         sendMessage(String.format("%s gagne le combat!", t.getName()), 4000);
         Combat.currentCombat = null;
+        // TODO: exit ?
     }
 
     public int getCurrentTurn() {
@@ -98,8 +110,7 @@ public class Combat {
     }
 
     public void sendMessage(String message) {
-        // TODO: Calculer un TTL selon la taille du message.
-        this.sendMessage(message, 2000); // WARN: Constante Temporaire
+        this.sendMessage(message, 1500);
     }
 
     /**
@@ -110,12 +121,14 @@ public class Combat {
     public void sendMessage(String message, int ttl) {
         for (int i = 0; i < message.length(); i++) {
             System.out.print(message.charAt(i));
+            System.out.flush();
             try {
-                Thread.sleep(5);
+                Thread.sleep(10);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        System.out.println();
 
         try {
             Thread.sleep(Math.max(0, ttl - message.length() * 5));

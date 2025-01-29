@@ -118,11 +118,9 @@ public abstract class Monster {
         else                                avantage = 1.0f;
 
         float damage = (
-    (
-    (11 * m.getAttack() * a.getPower()) / (25 * getDefense())
-        + 2
-    ) * avantage * getRandomCoef()
-    );
+            ((11 * m.getAttack() * a.getPower()) / (25 * getDefense()) + 2)
+            * avantage * getRandomCoef()
+        );
 
         int roundedDamage = Math.round(damage);
 
@@ -304,22 +302,6 @@ public abstract class Monster {
 
     public void drinkPotion(Potion p) throws UnusableItemException {
         Stats stat = p.getAffectedStat();
-        int power = p.use(this);
-        switch (stat) {
-            case HP:
-            this.hp = Math.min(this.hp + power, this.maxHp);
-            break;
-            case ATTACK:
-            this.attack += power;
-            break;
-            case DEFENSE:
-            this.defense += power;
-            break;
-            case SPEED:
-            this.speed += power;
-            break;
-            default:
-            throw new UnusableItemException();
-        }
+        p.use(this);
     }
 }

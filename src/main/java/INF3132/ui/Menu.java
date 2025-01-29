@@ -32,8 +32,11 @@ public class Menu {
     }
 
     protected void displayItems() {
+        System.out.println();
+        System.out.println(String.format("MENU : %s", getName()));
+
         if (parent != null) {
-            System.out.println("");
+            System.out.println();
             displayItem("B", "Retour");
         }
 
@@ -83,7 +86,7 @@ public class Menu {
             }
 
             displayItems();
-            userInput = scanner.nextLine();
+            userInput = scanner.next();
             it = determineInputType(userInput);
         } while (it == InputType.INVALID);
 

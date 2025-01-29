@@ -20,8 +20,8 @@ import INF3132.ui.Menu;
 import INF3132.ui.MenuItem;
 
 public class App {
-    public static MonsterFactory[] monsterFactories;
-    public static AttackFactory[] attackFactories;
+    public static List<MonsterFactory> monsterFactories;
+    public static List<AttackFactory> attackFactories;
     public static List<PotionFactory> potionFactories;
     public static List<MedecineFactory> medecineFactories;
 
@@ -37,7 +37,7 @@ public class App {
         // GAME ASSETS LOADING
         // Loading Monsters
         System.out.print("Chargement des Monstres...                     ");
-        List<MonsterFactory> monsterFactories = new ArrayList<>();
+        monsterFactories = new ArrayList<>();
         try {
             mp = new MonsterParser("./monstres.txt");
             monsterFactories = mp.parseFull("Monster", "EndMonster");
@@ -49,7 +49,7 @@ public class App {
 
         System.out.print("Chargement des Attaques...                     ");
         // Loading attacks
-        List<AttackFactory> attackFactories = new ArrayList<>();
+        attackFactories = new ArrayList<>();
         try {
             ap = new AttackParser("./attacks.txt");
             attackFactories = ap.parseFull("Attack", "EndAttack");
@@ -232,22 +232,32 @@ public class App {
         // Bag Initialization
         int potionCount = (int)(Math.floor(Math.random() * 3) + 3);
         int medecineCount = (int)(Math.floor(Math.random() * 3) + 1);
+
         Bag bag1 = new Bag();
         Bag bag2 = new Bag();
+
         for (int i = 0; i < potionCount; i++) {
             PotionFactory potionFactory = potionFactories.get((int)(Math.floor(Math.random() * potionFactories.size())));
             bag1.addItem(potionFactory.create());
             bag2.addItem(potionFactory.create());
         }
+
         for (int i = 0; i < medecineCount; i++) {
             MedecineFactory medecine = medecineFactories.get((int)(Math.floor(Math.random() * medecineFactories.size())));
             bag1.addItem(medecine.create());
             bag2.addItem(medecine.create());
         }
+
         trainer1.setBag(bag1);
         trainer2.setBag(bag2);
 
-        scanner.close();
+        // TODO: faire une vraie init d'équipe
+        try {
+            trainer1.addToTeam(monsterFactories.get((int)Math.floor(Math.random() * monsterFactories.size())).create(attackFactories));
+            trainer2.addToTeam(monsterFactories.get((int)Math.floor(Math.random() * monsterFactories.size())).create(attackFactories));
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
 
         // Starting the game
         Combat c = Combat.initCombat(trainer1, trainer2);

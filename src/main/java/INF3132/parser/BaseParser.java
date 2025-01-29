@@ -85,8 +85,4 @@ public abstract class BaseParser<T> {
         }
         return result;
     }
-
-    public void close() throws IOException {
-        reader.close();
-    }
 }

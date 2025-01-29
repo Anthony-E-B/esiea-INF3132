@@ -92,9 +92,11 @@ public class Trainer {
         monstersMenu.setParent(turnMenu);
         attacksMenu.setParent(turnMenu);
 
+        turnMenu.prompt();
     }
 
     protected void endTurn() {
+        System.out.println("end turn");
         turnEnded.notifyListeners(new VoidEvent());
     }
 
@@ -115,6 +117,7 @@ public class Trainer {
     public void orderMonsterToAttack(Monster source, Monster target) {
         try {
             source.attack(target);
+            endTurn();
         } catch (AttackFailedException e) {
             Combat.getCurrentCombat().sendMessage(
                 String.format(
@@ -135,6 +138,7 @@ public class Trainer {
     public void orderMonsterToAttack(Monster source, Monster target, Attack a) {
         try {
             source.attack(target, a);
+            endTurn();
         } catch (AttackFailedException e) {
             Combat.getCurrentCombat().sendMessage(
                 String.format(
@@ -179,6 +183,9 @@ public class Trainer {
     public void addToTeam(Monster m) throws TeamFullException {
         if (team.size() < TEAM_MAX_SIZE) {
             team.add(m);
+            if (team.size() == 1) {
+                currentFightingMonster = m;
+            }
             return;
         }
 
