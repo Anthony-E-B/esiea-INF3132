@@ -138,6 +138,7 @@ public abstract class Monster {
      */
     public void inflictDamage(int damage) {
         setHp(getHp() - Math.min(hp, damage));
+        if (getHp() == 0) died.notifyListeners(new VoidEvent());
     }
 
     /**
