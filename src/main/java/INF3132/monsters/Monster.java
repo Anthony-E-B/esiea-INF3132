@@ -2,6 +2,7 @@ package INF3132.monsters;
 
 import INF3132.attacks.Attack;
 import INF3132.attacks.exception.AttackFailedException;
+import INF3132.attacks.exception.SlippedAndFailedException;
 import INF3132.items.exception.UnusableItemException;
 import INF3132.items.subclasses.Potion;
 import INF3132.monsters.subclasses.WaterMonster;
@@ -95,7 +96,7 @@ public abstract class Monster {
      * @param m The attacker.
      * @return The inflicted damage, not rounded.
      */
-    public float receiveAttack(Monster m) {
+    public int receiveAttack(Monster m) {
         float damage = 20 * (m.getAttack() / getDefense()) * Monster.getRandomCoef();
 
         if (m.getType() == weakType) damage *= 2;
@@ -104,7 +105,7 @@ public abstract class Monster {
         int roundedDamage = Math.round(damage);
 
         inflictDamage(roundedDamage);
-        return damage;
+        return roundedDamage;
     }
 
     /**
@@ -116,7 +117,7 @@ public abstract class Monster {
      * @param a The attack to take damage from
      * @return The inflicted damage, not rounded.
      */
-    public float receiveAttack(Monster m, Attack a) {
+    public int receiveAttack(Monster m, Attack a) {
         float avantage;
         MonsterType attackType = a.getType();
 
@@ -132,7 +133,7 @@ public abstract class Monster {
         int roundedDamage = Math.round(damage);
 
         inflictDamage(roundedDamage);
-        return damage;
+        return roundedDamage;
     }
 
     /**
@@ -184,16 +185,18 @@ public abstract class Monster {
         return COEF_MIN + (float)Math.random() * (COEF_MAX - COEF_MIN);
     }
 
-    public void attack(Monster target) throws AttackFailedException {
+    public int attack(Monster target) throws AttackFailedException, SlippedAndFailedException {
         beforeAttack();
-        float inflictedDamage = target.receiveAttack(this);
+        int inflictedDamage = target.receiveAttack(this);
         afterAttack(inflictedDamage);
+        return inflictedDamage;
     }
 
-    public void attack(Monster target, Attack a) throws AttackFailedException {
+    public int attack(Monster target, Attack a) throws AttackFailedException, SlippedAndFailedException {
         beforeAttack();
-        float inflictedDamage = target.receiveAttack(this, a);
+        int inflictedDamage = target.receiveAttack(this, a);
         afterAttack(inflictedDamage, a);
+        return inflictedDamage;
     }
 
     /**
@@ -231,7 +234,7 @@ public abstract class Monster {
     }
 
     protected void afterAttack(float inflictedDamage, Attack a) {
-        if (negativeStatus != null) negativeStatus.attackedHook(inflictedDamage);
+        if (negativeStatus != null) negativeStatus.afterAttackHook(inflictedDamage);
     }
 
     public void disposeNegativeStatus(NegativeStatus status) {
@@ -310,5 +313,11 @@ public abstract class Monster {
 
     public void drinkPotion(Potion p) throws UnusableItemException {
         p.use(this);
+    }
+
+    public String getSummary() {
+        String summary = String.format("%s (Type %s, santé : %d/%d", getName(), getType().toString(), getHp(), getMaxHp());
+        summary += status != null ? String.format(" %s)", status.toString()) : ")";
+        return summary;
     }
 }

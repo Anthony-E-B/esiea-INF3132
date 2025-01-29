@@ -131,7 +131,7 @@ public class Combat {
         System.out.println();
 
         try {
-            Thread.sleep(Math.max(0, ttl - message.length() * 5));
+            Thread.sleep(Math.max(0, ttl - message.length() * 10));
         } catch (Exception e) {
             e.printStackTrace();
         }
