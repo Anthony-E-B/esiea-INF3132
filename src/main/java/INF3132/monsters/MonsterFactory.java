@@ -8,6 +8,7 @@ import INF3132.monsters.subclasses.*;
 import INF3132.parser.exception.UnhandledMonsterTypeException;
 import INF3132.attacks.Attack;
 import INF3132.attacks.AttackFactory;
+import INF3132.attacks.AttackType;
 
 public class MonsterFactory {
 
@@ -93,10 +94,16 @@ public class MonsterFactory {
         }
         ArrayList<Attack> attacks = new ArrayList<>();
         ArrayList<Attack> attacksOfSameType = new ArrayList<>();
+        AttackType typeCheck;
+        if(type == MonsterType.INSECT || type == MonsterType.GRASS){
+            typeCheck = AttackType.NATURE;
+        } else {
+            typeCheck = AttackType.valueOf(type.toString());
+        }
 
         // Logic is adding 3 attacks of the same type, and one normal move
         for (AttackFactory a : attackList){
-            if (a.getType() == type) attacksOfSameType.add(a.create());
+            if (a.getType() == typeCheck) attacksOfSameType.add(a.create());
         }
 
         int specialAttackPoolSize = 3;
@@ -109,7 +116,7 @@ public class MonsterFactory {
 
         ArrayList<Attack> normalAttacks = new ArrayList<>();
         for (AttackFactory a : attackList){
-            if (a.getType() == MonsterType.NORMAL) normalAttacks.add(a.create());
+            if (a.getType() == AttackType.NORMAL) normalAttacks.add(a.create());
         }
 
         for (int j = 0; j < 4 - specialAttackPoolSize; j++){
