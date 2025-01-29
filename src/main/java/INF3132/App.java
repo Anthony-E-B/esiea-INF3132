@@ -230,8 +230,8 @@ public class App {
         Trainer trainer2 = new Trainer(trainer2name);
 
         // Bag Initialization
-        int potionCount = (int)(Math.floor(Math.random() * 3) + 3);
-        int medecineCount = (int)(Math.floor(Math.random() * 3) + 1);
+        int potionCount = (int)(Math.floor(Math.random() * 3) + 1); // 1-3 potions
+        int medecineCount = (int)(Math.floor(Math.random() * 2) + 1); // 1-2 medecines
 
         Bag bag1 = new Bag();
         Bag bag2 = new Bag();
