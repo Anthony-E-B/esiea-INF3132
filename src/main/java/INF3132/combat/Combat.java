@@ -29,9 +29,6 @@ public class Combat {
         this.t1 = t1;
         this.t2 = t2;
 
-        currentTrainer = Math.random() > .5 ? t1 : t2;
-        opponent = currentTrainer == t1 ? t2 : t1;
-
         this.terrain = new Terrain(this);
     }
 
@@ -78,7 +75,10 @@ public class Combat {
             t2.getName()
         ));
 
-        t1.playTurn();
+        currentTrainer = Math.random() > .5 ? t1 : t2;
+        opponent = currentTrainer == t1 ? t2 : t1;
+
+        currentTrainer.playTurn();
     }
 
     /**
