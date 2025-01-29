@@ -85,6 +85,8 @@ public abstract class Monster {
         this.attacks = attacks;
         this.status = status;
         this.hp = maxHp;
+
+        this.died = new EventPublisher<>();
     }
 
     /**
@@ -307,7 +309,6 @@ public abstract class Monster {
     }
 
     public void drinkPotion(Potion p) throws UnusableItemException {
-        Stats stat = p.getAffectedStat();
         p.use(this);
     }
 }

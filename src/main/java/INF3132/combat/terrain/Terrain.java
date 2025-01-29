@@ -19,7 +19,12 @@ public class Terrain {
     }
 
     public void onTurnChanged(Integer turn) {
-        if (floodedRemainingTurns > 0) floodedRemainingTurns -= 1;
+        if (floodedRemainingTurns > 0) {
+            floodedRemainingTurns -= 1;
+        } else {
+            return;
+        }
+
         if (floodedRemainingTurns == 0) {
             notifyTerrainNotFloodedAnymore();
             flooder.died.removeListener(this::onFlooderDied);

@@ -117,7 +117,6 @@ public class Trainer {
     public void orderMonsterToAttack(Monster source, Monster target) {
         try {
             source.attack(target);
-            endTurn();
         } catch (AttackFailedException e) {
             Combat.getCurrentCombat().sendMessage(
                 String.format(
@@ -127,6 +126,7 @@ public class Trainer {
                 )
             );
         }
+        endTurn();
     }
 
     /**
@@ -138,7 +138,6 @@ public class Trainer {
     public void orderMonsterToAttack(Monster source, Monster target, Attack a) {
         try {
             source.attack(target, a);
-            endTurn();
         } catch (AttackFailedException e) {
             Combat.getCurrentCombat().sendMessage(
                 String.format(
@@ -149,6 +148,7 @@ public class Trainer {
                 )
             );
         }
+        endTurn();
     }
 
     /**
