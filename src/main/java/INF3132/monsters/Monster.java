@@ -9,11 +9,16 @@ import INF3132.items.Stats;
 import INF3132.combat.Combat;
 import INF3132.combat.negativestatus.NegativeStatus;
 import INF3132.combat.terrain.Terrain;
+import INF3132.events.EventPublisher;
+import INF3132.events.VoidEvent;
 
 import java.util.List;
 import java.util.ArrayList;
 
 public abstract class Monster {
+
+    public EventPublisher<VoidEvent> died;
+
     private String name;
 
     private int hp;

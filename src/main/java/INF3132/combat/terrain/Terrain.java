@@ -1,6 +1,7 @@
 package INF3132.combat.terrain;
 
 import INF3132.combat.Combat;
+import INF3132.events.VoidEvent;
 import INF3132.monsters.subclasses.WaterMonster;
 
 public class Terrain {
@@ -18,8 +19,11 @@ public class Terrain {
     }
 
     public void onTurnChanged(Integer turn) {
-        if (floodedRemainingTurns > 0)
-        floodedRemainingTurns -= 1;
+        if (floodedRemainingTurns > 0) floodedRemainingTurns -= 1;
+        if (floodedRemainingTurns == 0) {
+            notifyTerrainNotFloodedAnymore();
+            flooder.died.removeListener(this::onFlooderDied);
+        }
     }
 
     public boolean isFlooded() {
@@ -39,7 +43,17 @@ public class Terrain {
         if (floodTerrainFor < floodedRemainingTurns) return;
 
         floodedRemainingTurns = floodTerrainFor;
-        combat.sendMessage("Le terrain est inondé !");
+        combat.sendMessage("%s a inondé le terrain!");
+        flooder.died.addListener(this::onFlooderDied);
+    }
+
+    public void onFlooderDied(VoidEvent ve) {
+        floodedRemainingTurns = 0;
+        notifyTerrainNotFloodedAnymore();
+    }
+
+    private void notifyTerrainNotFloodedAnymore() {
+        combat.sendMessage("Le terrain n'est plus inondé!");
     }
 
     /**
