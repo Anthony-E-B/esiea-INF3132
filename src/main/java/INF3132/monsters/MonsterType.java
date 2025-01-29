@@ -12,6 +12,7 @@ public enum MonsterType {
     ELECTRIC;   // Foudre
 
     public boolean equalsType(AttackType attackType) {
+        if(attackType == null || attackType.name() == null) return false;
         return this.name().equals(attackType.name());
     }
 }
