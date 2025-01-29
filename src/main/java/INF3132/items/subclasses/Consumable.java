@@ -4,7 +4,7 @@ import INF3132.items.Item;
 import INF3132.items.exception.UnusableItemException;
 import INF3132.monsters.Monster;
 
-abstract public class Consumable extends Item {
+public abstract class Consumable extends Item {
     boolean isUsed;
 
     public Consumable(String name){

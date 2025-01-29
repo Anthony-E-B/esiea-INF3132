@@ -2,83 +2,102 @@ package INF3132;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Scanner;
 import java.util.ArrayList;
 
 import INF3132.attacks.AttackFactory;
-import INF3132.items.Stats;
-import INF3132.items.subclasses.Medecine;
-import INF3132.items.subclasses.Potion;
-import INF3132.monsters.Monster;
+import INF3132.combat.Combat;
+import INF3132.items.subclasses.MedecineFactory;
+import INF3132.items.subclasses.PotionFactory;
 import INF3132.monsters.MonsterFactory;
-import INF3132.monsters.Status;
 import INF3132.parser.AttackParser;
 import INF3132.parser.MedecineParser;
 import INF3132.parser.MonsterParser;
 import INF3132.parser.PotionParser;
-import INF3132.parser.exception.UnhandledMonsterTypeException;
+import INF3132.trainer.Bag;
 import INF3132.trainer.Trainer;
-import INF3132.trainer.exception.TeamFullException;
 import INF3132.ui.Menu;
 import INF3132.ui.MenuItem;
-import INF3132.trainer.Bag;
 
 public class App {
+    public static List<MonsterFactory> monsterFactories;
+    public static List<AttackFactory> attackFactories;
+    public static List<PotionFactory> potionFactories;
+    public static List<MedecineFactory> medecineFactories;
+
     public static void main(String[] args) {
-        System.out.println("Hello Dresseur!");
         MonsterParser mp;
         AttackParser ap;
         PotionParser pp;
         MedecineParser mep;
 
-        // Test chargement monstres
-        List<MonsterFactory> monsterFactories = new ArrayList<>();
+        // Padding line
+        System.out.println();
+
+        // GAME ASSETS LOADING
+        // Loading Monsters
+        System.out.print("Chargement des Monstres...                     ");
+        monsterFactories = new ArrayList<>();
         try {
             mp = new MonsterParser("./monstres.txt");
             monsterFactories = mp.parseFull("Monster", "EndMonster");
-            for (MonsterFactory m : monsterFactories){
-                System.out.println(m.getName());
-            }
+            System.out.println(String.format("\r%d définitions de monstres chargées.", monsterFactories.size()));
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Erreur lors du chargement de fichier de monstres !");
+            System.err.println("\rErreur lors du chargement de fichier de monstres !");
         }
 
-        // Test chargement attaques
-        List<AttackFactory> attackFactories = new ArrayList<>();
+        System.out.print("Chargement des Attaques...                     ");
+        // Loading attacks
+        attackFactories = new ArrayList<>();
         try {
             ap = new AttackParser("./attacks.txt");
             attackFactories = ap.parseFull("Attack", "EndAttack");
-            for (AttackFactory af : attackFactories){
-                System.out.println(af.getName() + " - " +  af.getType());
-            }
+            System.out.println(String.format("\r%d définitions d'attaques chargées.", attackFactories.size()));
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Erreur lors du chargement du fichier d'attaques !");
+            System.err.println("\rErreur lors du chargement du fichier d'attaques !");
         }
 
-        // Test chargement potions
+        // TODO: passer en factories !
+        System.out.print("Chargement des Potions...                     ");
+        // Loading potions
         try {
             pp = new PotionParser("./potions.txt");
-            List<Potion> potionList = pp.parseFull("Potion", "EndPotion");
-            for (Potion p : potionList){
-                System.out.println(p.getName() + " - " + p.getStatAffected() + " " + p.getItemPower());
-            }
+            App.potionFactories = pp.parseFull("Potion", "EndPotion");
+            System.out.println(String.format("\r%d définitions de potions chargées.", potionFactories.size()));
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Erreur lors du chargement du fichier de potions !");
+            System.err.println("\rErreur lors du chargement du fichier de potions !");
         }
 
-        // Test chargement des médicaments
+        System.out.print("Chargement des Médicaments...                     ");
+        // Loading medecines
         try {
             mep = new MedecineParser("./medecines.txt");
-            List<Medecine> medicineList = mep.parseFull("Medecine", "EndMedecine");
-            for (Medecine me : medicineList){
-                System.out.println(me.getName() + " - " + me.getStatus());
-            }
+            App.medecineFactories = mep.parseFull("Medecine", "EndMedecine");
+            System.out.println(String.format("\r%d définitions de médicaments chargées.", medecineFactories.size()));
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Erreurs lors du chargement du fichier des médicaments !");
         }
+
+
+        System.out.print("\r                                               ");
+        Menu mainMenu = new Menu("Menu principal", null);
+
+        MenuItem[] mainMenuItems = {
+            new MenuItem("Démarrer la partie", () -> { startGame(); }),
+            new MenuItem("Obtenir de l'aide", () -> { displayHelp(mainMenu); })
+        };
+
+        mainMenu.setItems(mainMenuItems);
+        mainMenu.prompt();
+
+        /* System.out.println("Hello Dresseur!");
+
+
+        // Test chargement potions
 
         // Initialize combat
         Trainer t1 = new Trainer("Entraîneur 1");
@@ -111,7 +130,7 @@ public class App {
             });
         });
 
-        // Test création d'un bag
+        // Bag Initialization
         Bag bag = new Bag();
         bag.addItem(new Potion("Potion", 50, Stats.HP));
         bag.addItem(new Potion("Super Potion", 100, Stats.HP));
@@ -152,6 +171,96 @@ public class App {
         Menu testMenu = new Menu(items);
         menu2.setParent(testMenu);
 
-        testMenu.prompt();
+        testMenu.prompt(); */
+    }
+
+    public static void displayHelp(Menu backMenu) {
+        System.out.println("MONSTRE DE POCHE - Guide de jeu");
+        System.out.println();
+        System.out.println("=== Principe du jeu ============================");
+        System.out.println();
+        System.out.println("Le jeu se joue à deux joueurs.");
+        System.out.println("Au début de la partie, le nom du joueur 1 et 2 sont respectivement demandés.");
+        System.out.println("Un ensemble de 4 Monstres est assigné aléatoirement à chacun des joueurs.");
+        System.out.println("Pour chacun de ces Monstres, des statistiques sont assignées aléatoirement (attaque, vitesse, défense, etc). Ces statistiques respectent les définitions du fichier de définition.");
+        System.out.println("Les joueurs jouent tour à tour.");
+        System.out.println("Le but est d'être le dernier à avoir au moins un Monstre en vie");
+        System.out.println("Vous avez 3 actions possibles à disposition à chaque tour");
+        System.out.println();
+        System.out.println("=== Comment jouer ? ============================");
+        System.out.println();
+        System.out.println("À chaque tour vous avez 4 actions à votre disposition.");
+        System.out.println();
+        System.out.println("\tCharger");
+        System.out.println("La charge est votre attaque de base.");
+        System.out.println("Elle affecte tous les types de Monstre de la même manière");
+        System.out.println();
+        System.out.println("\tAttaquer");
+        System.out.println("Comme mentionné précédemment, vos Monstres disposent d'un panel d'attaques spéciales selon leur type.");
+        System.out.println("Ces attaques sont plus ou moins efficaces selon le type de Monstre. Vous devrez expérimenter pour déterminer quelles attaques sont efficaces contre quels types de Monstre !");
+        System.out.println();
+        System.out.println("\tUtiliser un objet");
+        System.out.println("Vous disposerez d'objets qui peuvent aider vos Monstres à combattre ou se remettre de blessures");
+        System.out.println("Leur nom est explicite.");
+
+        backMenu.prompt();
+    }
+
+    /**
+     * Starts the game loop.
+     * This method is only called once.
+     */
+    public static void startGame() {
+        Scanner scanner = new Scanner(System.in);
+
+        String trainer1name = "";
+        do {
+            System.out.print("Nom du dresseur 1 : ");
+            System.out.flush();
+            trainer1name = scanner.nextLine();
+        } while (trainer1name.trim().length() == 0);
+        Trainer trainer1 = new Trainer(trainer1name);
+
+        String trainer2name = "";
+        do {
+            System.out.print("Nom du dresseur 2 : ");
+            System.out.flush();
+            trainer2name = scanner.nextLine();
+        } while (trainer2name.trim().length() == 0);
+        Trainer trainer2 = new Trainer(trainer2name);
+
+        // Bag Initialization
+        int potionCount = (int)(Math.floor(Math.random() * 3) + 3);
+        int medecineCount = (int)(Math.floor(Math.random() * 3) + 1);
+
+        Bag bag1 = new Bag();
+        Bag bag2 = new Bag();
+
+        for (int i = 0; i < potionCount; i++) {
+            PotionFactory potionFactory = potionFactories.get((int)(Math.floor(Math.random() * potionFactories.size())));
+            bag1.addItem(potionFactory.create());
+            bag2.addItem(potionFactory.create());
+        }
+
+        for (int i = 0; i < medecineCount; i++) {
+            MedecineFactory medecine = medecineFactories.get((int)(Math.floor(Math.random() * medecineFactories.size())));
+            bag1.addItem(medecine.create());
+            bag2.addItem(medecine.create());
+        }
+
+        trainer1.setBag(bag1);
+        trainer2.setBag(bag2);
+
+        // TODO: faire une vraie init d'équipe
+        try {
+            trainer1.addToTeam(monsterFactories.get((int)Math.floor(Math.random() * monsterFactories.size())).create(attackFactories));
+            trainer2.addToTeam(monsterFactories.get((int)Math.floor(Math.random() * monsterFactories.size())).create(attackFactories));
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
+        // Starting the game
+        Combat c = Combat.initCombat(trainer1, trainer2);
+        c.start();
     }
 }
