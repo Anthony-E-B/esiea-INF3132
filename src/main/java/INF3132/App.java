@@ -9,7 +9,9 @@ import INF3132.attacks.AttackFactory;
 import INF3132.combat.Combat;
 import INF3132.items.subclasses.MedecineFactory;
 import INF3132.items.subclasses.PotionFactory;
+import INF3132.monsters.Monster;
 import INF3132.monsters.MonsterFactory;
+import INF3132.monsters.MonsterType;
 import INF3132.parser.AttackParser;
 import INF3132.parser.MedecineParser;
 import INF3132.parser.MonsterParser;
@@ -251,16 +253,42 @@ public class App {
         trainer1.setBag(bag1);
         trainer2.setBag(bag2);
 
-        // TODO: faire une vraie init d'équipe
-        try {
-            trainer1.addToTeam(monsterFactories.get((int)Math.floor(Math.random() * monsterFactories.size())).create(attackFactories));
-            trainer2.addToTeam(monsterFactories.get((int)Math.floor(Math.random() * monsterFactories.size())).create(attackFactories));
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
+        // try {
+        //     trainer1.addToTeam(monsterFactories.get((int)Math.floor(Math.random() * monsterFactories.size())).create(attackFactories));
+        //     trainer2.addToTeam(monsterFactories.get((int)Math.floor(Math.random() * monsterFactories.size())).create(attackFactories));
+        // } catch (Throwable e) {
+        //     e.printStackTrace();
+        // }
+
+        initTeam(trainer1);
+        initTeam(trainer2);
 
         // Starting the game
         Combat c = Combat.initCombat(trainer1, trainer2);
         c.start();
+    }
+
+    public static void initTeam(Trainer trainer) {
+        for (int i = 0; i < 3; i++) {
+            // Add three different monsters to the team
+            // not more than two of the same type
+            try {
+                MonsterFactory mf = monsterFactories.get((int)Math.floor(Math.random() * monsterFactories.size()));
+                MonsterType type = mf.getType();
+                int count = 0;
+                for (Monster m : trainer.getTeam()) {
+                    if (m.getType() == type) {
+                        count++;
+                    }
+                }
+                if (count < 2) {
+                    trainer.addToTeam(mf.create(attackFactories));
+                } else {
+                    i--;
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
