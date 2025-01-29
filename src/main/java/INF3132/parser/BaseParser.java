@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import INF3132.parser.exception.InvalidAttackTypeException;
 import INF3132.parser.exception.InvalidMonsterTypeException;
+import INF3132.attacks.AttackType;
 import INF3132.monsters.*;
 
 public abstract class BaseParser<T> {
@@ -69,6 +71,19 @@ public abstract class BaseParser<T> {
             case "insect":      return MonsterType.INSECT;
             case "normal":      return MonsterType.NORMAL;
             default:            throw new InvalidMonsterTypeException();
+        }
+    }
+
+    public static AttackType parseAttackType(String attackTypeString) throws InvalidAttackTypeException {
+        String comp = attackTypeString.toLowerCase();
+        switch (comp) {
+            case "electric":    return AttackType.ELECTRIC;
+            case "fire":        return AttackType.FIRE;
+            case "water":       return AttackType.WATER;
+            case "ground":      return AttackType.GROUND;
+            case "nature":      return AttackType.NATURE;
+            case "normal":      return AttackType.NORMAL;
+            default:            throw new InvalidAttackTypeException();
         }
     }
 
