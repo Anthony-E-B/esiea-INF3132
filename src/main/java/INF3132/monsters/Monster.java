@@ -153,6 +153,10 @@ public abstract class Monster {
         return roundedDamage;
     }
 
+    public void startTurn(){
+        // This functions is intented to be overrid with special behaviours
+    }
+
     /**
      * Inflicts damage to this monster up to 100% of its remaining health.
      */
@@ -321,6 +325,15 @@ public abstract class Monster {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public NegativeStatus getNegativeStatus(){
+        return this.negativeStatus;
+    }
+
+    public void setNegativeStatus(NegativeStatus ns) {
+        if(this.negativeStatus == null) this.negativeStatus = ns;
+        return;
     }
 
     // Type
