@@ -3,6 +3,7 @@ package INF3132.monsters.subclasses;
 import java.util.List;
 
 import INF3132.attacks.Attack;
+import INF3132.attacks.AttackType;
 import INF3132.monsters.FloodAffectedMonster;
 import INF3132.monsters.Monster;
 import INF3132.monsters.MonsterType;
@@ -18,6 +19,8 @@ public class InsectMonster extends Monster implements FloodAffectedMonster {
         List<Attack> attacks
     ) {
         super(name, MonsterType.INSECT, hpMax, attack, defense, speed, attacks);
+        this.setWeakType(AttackType.FIRE);
+        this.setStrongType(AttackType.GROUND);
     }
 
     @Override
