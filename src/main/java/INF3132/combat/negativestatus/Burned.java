@@ -11,11 +11,21 @@ public class Burned extends NegativeStatus {
 
     @Override
     public void turnStartedHook() {
-        getMonster().inflictDamage(
-            Math.round(getMonster().getAttack() / 10)
+        Monster m = getMonster();
+        Combat c = getCombat();
+        m.inflictDamage(
+            Math.round(m.getAttack() / 10)
         );
-        getCombat().sendMessage(
-            String.format("%s souffre de sa brûlure !", getMonster().getName())
+        c.sendMessage(
+            String.format("%s souffre de sa brûlure !", m.getName())
         );
+
+        if (c.getTerrain().isFlooded()) {
+            c.sendMessage(String.format(
+                        "%s n'est plus brûlé grâce à l'inondation du terrain.", m.getName()
+                        ));
+            m.disposeNegativeStatus(this);
+        }
+
     }
 }
