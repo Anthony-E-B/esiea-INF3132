@@ -37,8 +37,10 @@ public abstract class NegativeStatus {
 
     /**
      * A hook method that should be called each time the affected monster attacks.
+     *
+     * @param inflictedDamage The damage inflicted to the opponent when attacking.
      */
-    public void attackedHook(float a) { }
+    public void afterAttackHook(float inflictedDamage) { }
 
     /**
      * Know at which game turn the negative status appeared.

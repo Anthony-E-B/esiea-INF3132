@@ -8,6 +8,7 @@ import INF3132.monsters.exception.UnownedMonsterException;
 import INF3132.monsters.exception.MonsterUnableToFightException;
 import INF3132.attacks.Attack;
 import INF3132.attacks.exception.AttackFailedException;
+import INF3132.attacks.exception.SlippedAndFailedException;
 import INF3132.combat.Combat;
 import INF3132.events.EventPublisher;
 import INF3132.events.VoidEvent;
@@ -38,9 +39,22 @@ public class Trainer {
     }
 
     public void playTurn() {
+        Trainer opponent = Combat.getCurrentCombat().getOpponent();
+        Combat.getCurrentCombat().sendMessage(
+            String.format(
+                "%s joue avec %s contre le %s de %s.",
+                getName(),
+                currentFightingMonster.getSummary(),
+                opponent.getCurrentFightingMonster().getSummary(),
+                opponent.getName()
+            )
+        );
+
         // "Swap monster" menu
         List<MenuItem> monstersMenuItem = new ArrayList<>();
-        team.forEach(monster -> monstersMenuItem.add(new MenuItem(monster.getName())));
+        team.forEach(monster -> monstersMenuItem.add(
+            new MenuItem((monster == currentFightingMonster ? "(ACTUEL) " : "") + monster.getSummary()))
+        );
         Menu monstersMenu = new Menu("Monstres", monstersMenuItem.toArray(MenuItem[]::new));
 
         // "Attack" menu
@@ -91,6 +105,7 @@ public class Trainer {
         // IMPORTANT: Set all menu's parent to the main turn menu
         monstersMenu.setParent(turnMenu);
         attacksMenu.setParent(turnMenu);
+        itemsMenu.setParent(turnMenu);
 
         turnMenu.prompt();
     }
@@ -115,8 +130,20 @@ public class Trainer {
      * @param target The {@link Monster} to attack.
      */
     public void orderMonsterToAttack(Monster source, Monster target) {
+        Combat combat = Combat.getCurrentCombat();
+        combat.sendMessage(String.format("%s charge %s !", source.getName(), target.getName()));
+
         try {
-            source.attack(target);
+            int inflictedDamage = source.attack(target);
+            Combat.getCurrentCombat().sendMessage(String.format("%s inflige %d de dommages à %s.", source.getName(), inflictedDamage, target.getName()));
+        } catch (SlippedAndFailedException e) {
+            Combat.getCurrentCombat().sendMessage(
+                String.format(
+                    "%s de %s glisse à cause du terrain inondé et rate sa charge !",
+                    source.getName(),
+                    this.getName()
+                )
+            );
         } catch (AttackFailedException e) {
             Combat.getCurrentCombat().sendMessage(
                 String.format(
@@ -133,16 +160,27 @@ public class Trainer {
      * Order a Monster to attack with {@link Attack} {@param a}
      * @param source The {@link Monster} to command.
      * @param target The {@link Monster} to attack.
-     * @param a The {@link Attack} to use.
+     * @param attack The {@link Attack} to use.
      */
-    public void orderMonsterToAttack(Monster source, Monster target, Attack a) {
+    public void orderMonsterToAttack(Monster source, Monster target, Attack attack) {
+        Combat combat = Combat.getCurrentCombat();
+        combat.sendMessage(String.format("%s attaque %s avec %s !", source.getName(), target.getName(), attack.getName()));
+
         try {
-            source.attack(target, a);
+            int inflictedDamage = source.attack(target, attack);
+            Combat.getCurrentCombat().sendMessage(String.format("%s inflige %d de dommages à %s.", source.getName(), inflictedDamage, target.getName()));
+        } catch (SlippedAndFailedException e) {
+            Combat.getCurrentCombat().sendMessage(
+                String.format(
+                    "%s de %s glisse à cause du terrain inondé et rate son attaque !",
+                    source.getName(),
+                    this.getName()
+                )
+            );
         } catch (AttackFailedException e) {
             Combat.getCurrentCombat().sendMessage(
                 String.format(
-                    "Mince, on dirait que l'attaque %s lancée par %s de %s a échoué !",
-                    a.getName(),
+                    "Mince, l'attaque lancée par %s de %s a échoué !",
                     source.getName(),
                     this.getName()
                 )
