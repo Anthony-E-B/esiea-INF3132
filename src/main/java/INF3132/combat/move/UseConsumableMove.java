@@ -20,7 +20,7 @@ public class UseConsumableMove implements CombatMove {
 
 	@Override
 	public int getPriority() {
-        return 1;
+        return 2;
 	}
 
 	@Override
@@ -34,4 +34,9 @@ public class UseConsumableMove implements CombatMove {
 
         trainer.getBag().removeItem(consumable);
 	}
+
+    @Override
+    public Monster getTarget() {
+        return monster;
+    }
 }

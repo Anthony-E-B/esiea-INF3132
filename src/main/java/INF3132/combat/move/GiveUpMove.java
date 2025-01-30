@@ -11,7 +11,7 @@ public class GiveUpMove implements CombatMove {
 
 	@Override
 	public int getPriority() {
-        return 1; // TODO:
+        return 4; // TODO:
 	}
 
 	@Override

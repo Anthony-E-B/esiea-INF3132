@@ -15,7 +15,7 @@ public class SwapMonsterMove implements CombatMove {
 
     @Override
     public int getPriority() {
-        return 1;
+        return 3;
     }
 
     @Override

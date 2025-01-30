@@ -29,7 +29,7 @@ public class AttackMove implements CombatMove {
 
 	@Override
 	public int getPriority() {
-        return 1; // TODO
+        return 1;
 	}
 
 	@Override
@@ -90,5 +90,15 @@ public class AttackMove implements CombatMove {
                 )
             );
         }
+    }
+
+    @Override
+    public Monster getAttacker() {
+        return source;
+    }
+
+    @Override
+    public Monster getTarget() {
+        return target;
     }
 }
