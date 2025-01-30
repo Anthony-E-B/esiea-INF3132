@@ -1,12 +1,12 @@
 package INF3132.monsters;
 
 import INF3132.attacks.Attack;
+import INF3132.attacks.AttackType;
 import INF3132.attacks.exception.AttackFailedException;
 import INF3132.attacks.exception.SlippedAndFailedException;
 import INF3132.items.exception.UnusableItemException;
 import INF3132.items.subclasses.Potion;
 import INF3132.monsters.subclasses.WaterMonster;
-import INF3132.items.Stats;
 import INF3132.combat.Combat;
 import INF3132.combat.negativestatus.NegativeStatus;
 import INF3132.combat.terrain.Terrain;
@@ -37,12 +37,12 @@ public abstract class Monster {
     /**
      * A type this monster is weak against
      */
-    private MonsterType weakType = null;
+    private AttackType weakType = null;
 
     /**
      * A type this monster is strong against.
      */
-    private MonsterType strongType = null;
+    private AttackType strongType = null;
 
     public Monster(
         String name,
@@ -100,11 +100,11 @@ public abstract class Monster {
         float damage = 20 * (m.getAttack() / getDefense()) * Monster.getRandomCoef();
         Combat combat = Combat.getCurrentCombat();
 
-        if (m.getType() == weakType) {
+        if (m.getType().equalsType(weakType)) {
             damage *= 2;
             combat.sendMessage("C'est super efficace !");
         }
-        else if (m.getType() == strongType) {
+        else if (m.getType().equalsType(strongType)) {
             damage /= 2;
             combat.sendMessage("Ce n'est pas très efficace...");
         }
@@ -126,7 +126,8 @@ public abstract class Monster {
      */
     public int receiveAttack(Monster m, Attack a) {
         float avantage;
-        MonsterType attackType = a.getType();
+
+        AttackType attackType = a.getType();
         Combat combat = Combat.getCurrentCombat();
 
         if (attackType == weakType) {

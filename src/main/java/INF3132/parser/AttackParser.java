@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import INF3132.attacks.AttackFactory;
-import INF3132.monsters.MonsterType;
-import INF3132.parser.exception.InvalidMonsterTypeException;
+import INF3132.attacks.AttackType;
+import INF3132.parser.exception.InvalidAttackTypeException;
 
 public class AttackParser extends BaseParser<AttackFactory> {
 
@@ -16,11 +16,11 @@ public class AttackParser extends BaseParser<AttackFactory> {
     @Override
     protected AttackFactory parseBlock(Map<String, String> blockData) {
         String name = blockData.get("Name");
-        MonsterType type = MonsterType.NORMAL;
+        AttackType type = AttackType.NORMAL;
 
         try {
-            type = BaseParser.parseMonsterType(blockData.get("Type"));
-        } catch (InvalidMonsterTypeException e) {
+            type = BaseParser.parseAttackType(blockData.get("Type"));
+        } catch (InvalidAttackTypeException e) {
             e.printStackTrace();
             System.err.println(e);
         }

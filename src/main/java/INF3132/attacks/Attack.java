@@ -10,11 +10,11 @@ public class Attack {
 
     private final float failRate;
 
-    private final MonsterType type;
+    private final AttackType type;
 
     public Attack(
         String name,
-        MonsterType type,
+        AttackType type,
         int power,
         int nbUse,
         float fail
@@ -34,7 +34,7 @@ public class Attack {
         this.name = name;
     }
 
-    public MonsterType getType() {
+    public AttackType getType() {
         return type;
     }
 

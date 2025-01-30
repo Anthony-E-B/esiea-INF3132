@@ -6,7 +6,7 @@ public class AttackFactory {
     private String name;
     private int power;
     private final float failRate;
-    private final MonsterType type;
+    private final AttackType type;
     private int nbUseMax;
 
     public AttackFactory(
@@ -14,7 +14,7 @@ public class AttackFactory {
         int power,
         int nbUseMax,
         float failRate,
-        MonsterType type
+        AttackType type
     ) {
         this.name = name;
         this.power = power;
@@ -47,7 +47,7 @@ public class AttackFactory {
         return failRate;
     }
 
-    public MonsterType getType() {
+    public AttackType getType() {
         return type;
     }
 
