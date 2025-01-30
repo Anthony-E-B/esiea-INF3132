@@ -331,6 +331,11 @@ public abstract class Monster {
         return this.negativeStatus;
     }
 
+    public void setNegativeStatus(NegativeStatus ns) {
+        if(this.negativeStatus == null) this.negativeStatus = ns;
+        return;
+    }
+
     // Type
     public MonsterType getType() {
         return type;
