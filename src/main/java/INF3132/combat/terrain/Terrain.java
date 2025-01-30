@@ -20,7 +20,7 @@ public class Terrain {
 
     public void onTurnChanged(Integer turn) {
         if (floodedRemainingTurns > 0) {
-            floodedRemainingTurns -= 1;
+            floodedRemainingTurns--;
         } else {
             return;
         }
@@ -48,12 +48,15 @@ public class Terrain {
         if (floodTerrainFor < floodedRemainingTurns) return;
 
         floodedRemainingTurns = floodTerrainFor;
-        combat.sendMessage("%s a inondé le terrain!");
+        combat.sendMessage(String.format("%s a inondé le terrain!", flooder.getName()));
         flooder.died.addListener(this::onFlooderDied);
     }
 
     public void onFlooderDied(VoidEvent ve) {
+        System.out.println("on flooder died");
         floodedRemainingTurns = 0;
+        flooder = null;
+        flooder.died.removeListener(this::onFlooderDied);
         notifyTerrainNotFloodedAnymore();
     }
 
