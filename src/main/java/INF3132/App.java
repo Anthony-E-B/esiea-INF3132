@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import INF3132.attacks.AttackFactory;
 import INF3132.combat.Combat;
 import INF3132.items.subclasses.MedecineFactory;
 import INF3132.items.subclasses.PotionFactory;
+import INF3132.monsters.Monster;
 import INF3132.monsters.MonsterFactory;
+import INF3132.monsters.MonsterType;
 import INF3132.parser.AttackParser;
 import INF3132.parser.MedecineParser;
 import INF3132.parser.MonsterParser;
@@ -251,10 +254,9 @@ public class App {
         trainer1.setBag(bag1);
         trainer2.setBag(bag2);
 
-        // TODO: faire une vraie init d'équipe
         try {
-            trainer1.addToTeam(monsterFactories.get((int)Math.floor(Math.random() * monsterFactories.size())).create(attackFactories));
-            trainer2.addToTeam(monsterFactories.get((int)Math.floor(Math.random() * monsterFactories.size())).create(attackFactories));
+            trainer1.setTeam(createTeam());
+            trainer2.setTeam(createTeam());
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -262,5 +264,32 @@ public class App {
         // Starting the game
         Combat c = Combat.initCombat(trainer1, trainer2);
         c.start();
+    }
+
+    public static List<Monster> createTeam() {
+        HashMap<MonsterType, Integer> typeCounts = new HashMap<>();
+        List<Monster> team = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) {
+            // Add three different monsters to the team
+            // not more than two of the same type
+            MonsterFactory mf;
+            MonsterType type;
+            do {
+                mf = monsterFactories.get((int)Math.floor(Math.random() * monsterFactories.size()));
+                type = mf.getType();
+            }
+            while (typeCounts.getOrDefault(type, 0) == 2);
+
+            try {
+                team.add(mf.create(attackFactories));
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+
+            typeCounts.put(type, typeCounts.getOrDefault(type, 0) + 1);
+        }
+
+        return team;
     }
 }

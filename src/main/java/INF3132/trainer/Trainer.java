@@ -15,6 +15,7 @@ import INF3132.events.VoidEvent;
 import INF3132.items.exception.UnownedItemException;
 import INF3132.items.exception.UnusableItemException;
 import INF3132.items.subclasses.Consumable;
+import INF3132.trainer.exception.InvalidTeamSetException;
 import INF3132.trainer.exception.TeamFullException;
 import INF3132.ui.Menu;
 import INF3132.ui.MenuItem;
@@ -228,6 +229,18 @@ public class Trainer {
         }
 
         throw new TeamFullException();
+    }
+
+    /**
+     * @implNote This method checks the size of the team but not the type rules.
+     */
+    public void setTeam(List<Monster> newTeam) throws InvalidTeamSetException {
+        if (newTeam.size() > 3 || newTeam.size() < 1) {
+            throw new InvalidTeamSetException();
+        }
+
+        this.team = newTeam;
+        currentFightingMonster = team.get(0);
     }
 
     public List<Monster> getTeam() {
