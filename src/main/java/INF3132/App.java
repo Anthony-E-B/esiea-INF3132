@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import INF3132.attacks.AttackFactory;
 import INF3132.combat.Combat;
@@ -253,42 +254,42 @@ public class App {
         trainer1.setBag(bag1);
         trainer2.setBag(bag2);
 
-        // try {
-        //     trainer1.addToTeam(monsterFactories.get((int)Math.floor(Math.random() * monsterFactories.size())).create(attackFactories));
-        //     trainer2.addToTeam(monsterFactories.get((int)Math.floor(Math.random() * monsterFactories.size())).create(attackFactories));
-        // } catch (Throwable e) {
-        //     e.printStackTrace();
-        // }
-
-        initTeam(trainer1);
-        initTeam(trainer2);
+        try {
+            trainer1.setTeam(createTeam());
+            trainer2.setTeam(createTeam());
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
 
         // Starting the game
         Combat c = Combat.initCombat(trainer1, trainer2);
         c.start();
     }
 
-    public static void initTeam(Trainer trainer) {
+    public static List<Monster> createTeam() {
+        HashMap<MonsterType, Integer> typeCounts = new HashMap<>();
+        List<Monster> team = new ArrayList<>();
+
         for (int i = 0; i < 3; i++) {
             // Add three different monsters to the team
             // not more than two of the same type
+            MonsterFactory mf;
+            MonsterType type;
+            do {
+                mf = monsterFactories.get((int)Math.floor(Math.random() * monsterFactories.size()));
+                type = mf.getType();
+            }
+            while (typeCounts.getOrDefault(type, 0) == 2);
+
             try {
-                MonsterFactory mf = monsterFactories.get((int)Math.floor(Math.random() * monsterFactories.size()));
-                MonsterType type = mf.getType();
-                int count = 0;
-                for (Monster m : trainer.getTeam()) {
-                    if (m.getType() == type) {
-                        count++;
-                    }
-                }
-                if (count < 2) {
-                    trainer.addToTeam(mf.create(attackFactories));
-                } else {
-                    i--;
-                }
+                team.add(mf.create(attackFactories));
             } catch (Throwable e) {
                 e.printStackTrace();
             }
+
+            typeCounts.put(type, typeCounts.getOrDefault(type, 0) + 1);
         }
+
+        return team;
     }
 }
