@@ -3,8 +3,10 @@ package INF3132.monsters.subclasses;
 import java.util.List;
 
 import INF3132.attacks.Attack;
+import INF3132.attacks.AttackType;
 import INF3132.attacks.exception.AttackFailedException;
 import INF3132.combat.Combat;
+import INF3132.combat.negativestatus.Poison;
 import INF3132.combat.terrain.Terrain;
 import INF3132.monsters.FloodAffectedMonster;
 import INF3132.monsters.Monster;
@@ -24,8 +26,7 @@ public class InsectMonster extends Monster implements FloodAffectedMonster {
     }
 
     @Override
-    public void beforeAttack() throws AttackFailedException {
-        super.beforeAttack();
+    public void startTurn() {
         Combat c = Combat.getCurrentCombat();
         Terrain t = c.getTerrain();
         if(t.isFlooded()){
@@ -45,6 +46,11 @@ public class InsectMonster extends Monster implements FloodAffectedMonster {
     @Override
     public void afterAttack(float inflictedDamage, Attack a) {
         super.afterAttack(inflictedDamage, a);
-        // TODO Implémenter la mécanique de régénération
+
+        if (a == null || a.getType() != AttackType.NATURE) return;
+        Combat c = Combat.getCurrentCombat();
+        Monster m = c.getOpponent().getCurrentFightingMonster();
+        Poison p = new Poison(m, c);
+        m.setNegativeStatus(p);
     }
 }
