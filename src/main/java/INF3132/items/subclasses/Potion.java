@@ -33,7 +33,9 @@ public class Potion extends Consumable {
                 m.improveSpeed(getItemPower());
                 break;
             }
-        } else throw new UnusableItemException();
+        } else {
+            throw new UnusableItemException();
+        }
     }
 
     @Override

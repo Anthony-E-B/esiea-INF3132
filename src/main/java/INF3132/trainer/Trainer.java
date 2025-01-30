@@ -73,18 +73,17 @@ public class Trainer {
 
         // "Items" menu
         List<MenuItem> itemsMenuItems = new ArrayList<>();
+        Menu itemsMenu = new Menu("Objets");
         bag.getItems().forEach(item ->
             itemsMenuItems.add(new MenuItem(item.getName(), () -> {
                 try {
-                    useConsumable((Consumable) item, currentFightingMonster);
+                    useConsumable((Consumable) item, itemsMenu);
                 } catch (UnownedItemException e) {
                     System.out.println("Vous ne possédez pas cet objet.");
-                } catch (UnusableItemException e) {
-                    System.out.println("Cet objet ne peut pas être utilisé.");
                 }
             }))
         );
-        Menu itemsMenu = new Menu("Objets", itemsMenuItems.toArray(MenuItem[]::new));
+        itemsMenu.setItems(itemsMenuItems.toArray(MenuItem[]::new));
 
 
         MenuItem[] turnMenuItems = {
@@ -119,10 +118,26 @@ public class Trainer {
     /**
      * Use a consumable on a monster
      */
-    public void useConsumable(Consumable i, Monster m) throws UnownedItemException, UnusableItemException {
+    public void useConsumable(Consumable i, Menu backMenu) throws UnownedItemException {
         if (!bag.itemIsOwn(i)) throw new UnownedItemException();
 
-        i.use(m);
+        List<MenuItem> monstersMenuItem = new ArrayList<>();
+        team.forEach(monster -> monstersMenuItem.add(
+            new MenuItem((monster == currentFightingMonster ? "(ACTUEL) " : "") + monster.getSummary(), () -> {
+                try {
+                    i.use(monster);
+                    bag.removeItem(i);
+                    Combat.getCurrentCombat().sendMessage(String.format("%s utilise %s sur %s !", this.getName(), i.getName(), monster.getName()));
+                } catch (UnusableItemException e) {
+                    Combat.getCurrentCombat().sendMessage(String.format("%s n'a eu aucun effet sur %s...", i.getName(), monster.getName()));
+                    bag.removeItem(i);
+                }
+                endTurn();
+            }))
+        );
+        Menu monstersMenu = new Menu("Utiliser sur quel monstre ?", monstersMenuItem.toArray(MenuItem[]::new), backMenu);
+
+        monstersMenu.prompt();
     }
 
     /**

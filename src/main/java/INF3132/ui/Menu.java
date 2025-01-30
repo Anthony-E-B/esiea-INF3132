@@ -16,6 +16,10 @@ public class Menu {
 
 	private Scanner scanner;
 
+    public Menu(String name) {
+        this(name, null);
+    }
+
     public Menu(String name, MenuItem[] items) {
         this(name, items, null);
     }
