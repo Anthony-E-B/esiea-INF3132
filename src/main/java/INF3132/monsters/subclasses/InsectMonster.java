@@ -52,5 +52,8 @@ public class InsectMonster extends Monster implements FloodAffectedMonster {
         Monster m = c.getOpponent().getCurrentFightingMonster();
         Poison p = new Poison(m, c);
         m.setNegativeStatus(p);
+        c.sendMessage(String.format(
+                "%s est empoisonné !", m.getName()
+        ));
     }
 }
