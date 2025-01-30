@@ -22,8 +22,7 @@ public class Medecine extends Consumable {
 
     @Override
     public boolean checkIfUsable(Monster m) {
-        if(m.getStatus().equals(this.status)) return true;
-        return false;
+        return m.getStatus() != null && m.getStatus().equals(this.status);
     }
 
     public Status getStatus(){
