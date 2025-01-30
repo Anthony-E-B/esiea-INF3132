@@ -51,6 +51,17 @@ public class Trainer {
             )
         );
 
+        // Check if the Monster is able to fight
+        if (currentFightingMonster.getHp() <= 0) {
+            Combat.getCurrentCombat().sendMessage(String.format("%s a un Pokémon KO et doit changer de monstre.", getName()));
+            boolean switched = switchToAnotherMonster();
+            if (!switched) {
+                Combat.getCurrentCombat().sendMessage(String.format("%s n'a plus de Pokémon en état de combattre !", getName()));
+                Combat.getCurrentCombat().setWinner(Combat.getCurrentCombat().getOpponent());
+                return;
+            }
+        }
+
         // "Swap monster" menu
         List<MenuItem> monstersMenuItem = new ArrayList<>();
         team.forEach(monster -> monstersMenuItem.add(
@@ -88,18 +99,26 @@ public class Trainer {
         itemsMenu.setItems(itemsMenuItems.toArray(MenuItem[]::new));
 
 
-        MenuItem[] turnMenuItems = {
-            new MenuItem(
-                "Charger",
-                () -> {
-                    Monster target = Combat.getCurrentCombat().getOpponent().getCurrentFightingMonster();
-                    endTurn(new AttackMove(this, currentFightingMonster, target));
-                }
-            ),
-            new MenuItem("Attaques spé.", attacksMenu),
-            new MenuItem("Objets", itemsMenu),
-            new MenuItem("Changer de monstre", monstersMenu),
-        };
+        MenuItem[] turnMenuItems;
+        if (currentFightingMonster.getHp() > 0) {
+            turnMenuItems = new MenuItem[]{
+                new MenuItem(
+                    "Charger",
+                    () -> {
+                        Monster target = Combat.getCurrentCombat().getOpponent().getCurrentFightingMonster();
+                        endTurn(new AttackMove(this, currentFightingMonster, target));
+                    }
+                ),
+                new MenuItem("Attaques spé.", attacksMenu),
+                new MenuItem("Objets", itemsMenu),
+                new MenuItem("Changer de monstre", monstersMenu),
+            };
+        } else {
+            // If monster is Knocked Out
+            turnMenuItems = new MenuItem[]{
+                new MenuItem("Changer de monstre", monstersMenu)
+            };
+        }
         Menu turnMenu = new Menu("Tour de " + getName(), turnMenuItems);
 
         // IMPORTANT: Set all menu's parent to the main turn menu, to be able to go back to it if needed.
@@ -137,6 +156,32 @@ public class Trainer {
         if (m.getHp() <= 0) throw new MonsterUnableToFightException();
 
         currentFightingMonster = m;
+    }
+
+
+    public boolean switchToAnotherMonster() {
+        List<Monster> availableMonsters = new ArrayList<>();
+        for (Monster m : team) {
+            if (m.getHp() > 0 && m != currentFightingMonster) availableMonsters.add(m);
+        }
+
+        if (availableMonsters.isEmpty()) return false;
+
+        List<MenuItem> monstersMenuItems = new ArrayList<>();
+        availableMonsters.forEach(monster -> monstersMenuItems.add(
+            new MenuItem(monster.getSummary(), () -> {
+                try {
+                    swapCurrentFightingMonster(monster);
+                    endTurn(new SwapMonsterMove(this, monster));
+                    Combat.getCurrentCombat().sendMessage(String.format("%s envoie %s sur le terrain.", getName(), monster.getName()));
+                } catch (MonsterUnableToFightException | UnownedMonsterException e) {
+                    e.printStackTrace();
+                }
+            })
+        ));
+        Menu monstersMenu = new Menu("Choisissez un nouveau monstre", monstersMenuItems.toArray(MenuItem[]::new));
+        monstersMenu.prompt();
+        return currentFightingMonster.getHp() > 0;
     }
 
     public void giveUp() {

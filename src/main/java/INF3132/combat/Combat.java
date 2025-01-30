@@ -81,8 +81,14 @@ public class Combat {
             }
 
             // Swap trainer
-            currentTrainer = opponent;
-            opponent = currentTrainer == t1 ? t2 : t1;
+            Trainer priorityTrainer = determinePriorityTrainer();
+            if (priorityTrainer != null) {
+                currentTrainer = priorityTrainer;
+                opponent = (currentTrainer == t1) ? t2 : t1;
+            } else {
+                currentTrainer = opponent;
+                opponent = (currentTrainer == t1) ? t2 : t1;
+            }
 
             // Play next turn
             currentTrainer.playTurn();
@@ -95,15 +101,34 @@ public class Combat {
                 movesSelected = 0;
 
                 // Sort moves by priority
-                trainersMoves.sort((a, b) -> a.getPriority() < b.getPriority() ? -1 : 1);
-                trainersMoves.forEach(move -> move.execute());
-
-                // Execute all moves in order
-                for (CombatMove move : trainersMoves)
+                trainersMoves.sort((a, b) -> Integer.compare(b.getPriority(), a.getPriority()));
+                for (CombatMove move : trainersMoves) {
+                    Monster attacker = move.getAttacker();
+                    Monster target = move.getTarget();
+                    // Ensures that a dead monster cannot attack
+                    if (attacker != null && attacker.getHp() <= 0) {
+                        sendMessage(String.format(
+                                    "%s est K.O et ne peut pas agir !", attacker.getName()
+                                    ));
+                        continue;
+                    }
+                    // Ensures that you can not attack a dead monster
+                    if (target != null && target.getHp() <= 0) {
+                        sendMessage(String.format(
+                                    "%s est déjà K.O. !", target.getName()
+                                    ));
+                        continue;
+                    }
                     move.execute();
-
-                for (CombatMove move : trainersMoves)
-                    trainersMoves.remove(move);
+                    // Log after move
+                    if (target != null && target.getHp() <= 0) {
+                        sendMessage(String.format(
+                                    "%s est mis K.O. !", target.getName()
+                                    ));
+                    break;
+                }
+                }
+                trainersMoves.clear();
             }
         }
     }
@@ -126,6 +151,23 @@ public class Combat {
         sendMessage(String.format("%s gagne le combat!", t.getName()), 4000);
         Combat.currentCombat = null;
         // TODO: exit ?
+    }
+
+    /**
+     * Determines if a trainer should play first.
+     * It prevents from playing against a dead Monster
+     */
+    private Trainer determinePriorityTrainer() {
+        boolean t1KO = t1.getCurrentFightingMonster().getHp() <= 0;
+        boolean t2KO = t2.getCurrentFightingMonster().getHp() <= 0;
+
+        if (t1KO && !t2KO) {
+            return t1;
+        } else if (t2KO && !t1KO) {
+            return t2;
+        } else {
+            return null;
+        }
     }
 
     public int getCurrentTurn() {
