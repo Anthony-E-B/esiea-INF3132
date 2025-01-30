@@ -10,7 +10,7 @@ import INF3132.monsters.Monster;
 import INF3132.monsters.MonsterType;
 
 public class GroundMonster extends Monster implements FloodAffectedMonster {
-    private boolean underground;
+    private boolean isUnderground;
     private int digDuration;
 
     public GroundMonster(
@@ -33,23 +33,26 @@ public class GroundMonster extends Monster implements FloodAffectedMonster {
     public void afterAttack(float inflictedDamage, Attack a) {
         super.afterAttack(inflictedDamage, a);
         Combat combat = Combat.getCurrentCombat();
+
         digDuration--;
-        if(digDuration <= 0 && underground && a.getType() != AttackType.GROUND){
+        if (digDuration <= 0 && isUnderground && a.getType() != AttackType.GROUND) {
             combat.sendMessage(String.format(
-                        "%s sort de sous terre !", this.getName()
+                "%s sort de sous terre !", this.getName()
             ));
-            this.improveDefense(-this.getDefense()/2);
-            underground = false;
+            this.improveDefense(-this.getDefense() / 2);
+            isUnderground = false;
         }
 
         if (a == null || a.getType() != AttackType.GROUND) return;
-        if (!underground){
+
+        if (!isUnderground) {
             combat.sendMessage(String.format(
-                        "%s se cache sous terre !", this.getName()
+                "%s se cache sous terre !", this.getName()
             ));
             this.improveDefense(this.getDefense());
         }
-        this.underground = true;
-        this.digDuration = Math.max(digDuration, (int)(Math.random()*3)+1);
+
+        this.isUnderground = true;
+        this.digDuration = Math.max(digDuration, (int)(Math.random() * 3) + 1);
     }
 }
