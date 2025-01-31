@@ -53,10 +53,12 @@ public class Terrain {
     }
 
     public void onFlooderDied(VoidEvent ve) {
-        System.out.println("on flooder died");
+        if (flooder == null) {
+            return;
+        }
         floodedRemainingTurns = 0;
-        flooder = null;
         flooder.died.removeListener(this::onFlooderDied);
+        flooder = null;
         notifyTerrainNotFloodedAnymore();
     }
 

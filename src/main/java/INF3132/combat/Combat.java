@@ -1,10 +1,13 @@
 package INF3132.combat;
 
+import INF3132.combat.move.AttackMove;
+import INF3132.combat.move.CombatMove;
 import INF3132.combat.terrain.Terrain;
 import INF3132.events.EventPublisher;
 import INF3132.trainer.Trainer;
 import INF3132.monsters.Monster;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Combat {
@@ -18,12 +21,14 @@ public class Combat {
 
     private static Combat currentCombat = null;
 
-
     public Trainer t1;
     public Trainer t2;
 
+    private List<CombatMove> trainersMoves;
+
     public Combat(Trainer t1, Trainer t2) {
         turnChanged =  new EventPublisher<Integer>();
+        trainersMoves = new ArrayList<>();
         currentTurn = 0;
 
         this.t1 = t1;
@@ -44,30 +49,16 @@ public class Combat {
         return false;
     }
 
-    public void nextTurn() {
-        // Checking if the opposite trainer has Monster able to fight left.
-        if (!oppositeTrainerCanFight()) {
-            sendMessage("L'adversaire n'a plus de monstres en état de combattre !");
-            setWinner(currentTrainer);
-        }
-
-        // Swap trainer
-        currentTrainer = opponent;
-        opponent = currentTrainer == t1 ? t2 : t1;
-
-        // Play next turn
-        currentTurn++;
-        turnChanged.notifyListeners(currentTurn);
-
-        currentTrainer.playTurn();
+    public void onMoveSelected(CombatMove move) {
+        trainersMoves.add(move);
     }
 
     public void start() {
-        t1.giveUp.addListener(ve -> onGiveUp(t1));
-        t2.giveUp.addListener(ve -> onGiveUp(t2));
+        t1.giveUp.addListener(voidEvent -> onGiveUp(t1));
+        t2.giveUp.addListener(voidEvent -> onGiveUp(t2));
 
-        t1.turnEnded.addListener(ve -> nextTurn());
-        t2.turnEnded.addListener(ve -> nextTurn());
+        t1.turnEnded.addListener(this::onMoveSelected);
+        t2.turnEnded.addListener(this::onMoveSelected);
 
         sendMessage(String.format(
             "%s et %s veulent se battre !",
@@ -78,7 +69,100 @@ public class Combat {
         currentTrainer = Math.random() > .5 ? t1 : t2;
         opponent = currentTrainer == t1 ? t2 : t1;
 
-        currentTrainer.playTurn();
+        // When this int reaches 2, it means everybody chose their move :
+        // Execute the moves in order of priority, and reset to 0.
+        int movesSelected = 0;
+
+        while (true) {
+            // Checking if the opposite trainer has Monster able to fight left.
+            if (!oppositeTrainerCanFight()) {
+                sendMessage("L'adversaire n'a plus de monstres en état de combattre !");
+                setWinner(currentTrainer);
+                break; // Combat ended - Exit out of the loop.
+            }
+
+            // Swap trainer
+            Trainer priorityTrainer = determinePriorityTrainer();
+            if (priorityTrainer != null) {
+                currentTrainer = priorityTrainer;
+                opponent = (currentTrainer == t1) ? t2 : t1;
+            } else {
+                currentTrainer = opponent;
+                opponent = (currentTrainer == t1) ? t2 : t1;
+            }
+
+            // Play next turn
+            currentTrainer.playTurn();
+            movesSelected++;
+
+            // Every player have chosen their move : play them in order of priority, and reset.
+            if (movesSelected == 2) {
+                currentTurn++;
+                turnChanged.notifyListeners(currentTurn);
+                movesSelected = 0;
+
+                if (movesAreBothAttackMove()) {
+                    // If both moves are attack moves, sort them by the speed of the monsters
+                    trainersMoves.sort((a, b) -> Integer.compare(
+                        a.getAttacker().getSpeed(),
+                        b.getAttacker().getSpeed()
+                    ));
+                } else { // Sort moves by priority
+                    trainersMoves.sort((a, b) -> Integer.compare(b.getPriority(), a.getPriority()));
+                }
+
+                for (CombatMove move : trainersMoves) {
+                    Monster attacker = move.getAttacker();
+                    Monster target = move.getTarget();
+
+                    if (!(move instanceof AttackMove)) {
+                        move.execute();
+                        continue;
+                    }
+
+                    // NOTE: From now on, treat AttackMove specific logic
+
+                    // Ensures that a dead monster cannot attack
+                    if (attacker != null && attacker.getHp() <= 0) {
+                        sendMessage(String.format(
+                            "%s est K.O et ne peut pas agir !", attacker.getName()
+                        ));
+                        continue;
+                    }
+
+                    // Ensures that you can not attack a dead monster
+                    if (target != null && target.getHp() <= 0) {
+                        sendMessage(String.format(
+                            "%s est déjà K.O. !", target.getName()
+                        ));
+                        continue;
+                    }
+
+                    move.execute();
+                    if (target != null && target.getHp() <= 0) {
+                        sendMessage(String.format(
+                            "%s est mis K.O. !", target.getName()
+                        ));
+                        break;
+                    }
+                }
+                trainersMoves.clear();
+            }
+        }
+    }
+
+    /**
+     * Checks if both selected {@link CombatMove} are attack moves.
+     * @see AttackMove
+     */
+    public boolean movesAreBothAttackMove() {
+        for (CombatMove move : trainersMoves) {
+            if (!(move instanceof AttackMove)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -99,6 +183,23 @@ public class Combat {
         sendMessage(String.format("%s gagne le combat!", t.getName()), 4000);
         Combat.currentCombat = null;
         // TODO: exit ?
+    }
+
+    /**
+     * Determines if a trainer should play first.
+     * It prevents from playing against a dead Monster
+     */
+    private Trainer determinePriorityTrainer() {
+        boolean t1KO = t1.getCurrentFightingMonster().getHp() <= 0;
+        boolean t2KO = t2.getCurrentFightingMonster().getHp() <= 0;
+
+        if (t1KO && !t2KO) {
+            return t1;
+        } else if (t2KO && !t1KO) {
+            return t2;
+        } else {
+            return null;
+        }
     }
 
     public int getCurrentTurn() {

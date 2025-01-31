@@ -1,20 +1,20 @@
 package INF3132.trainer;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-import INF3132.monsters.Monster;
-import INF3132.monsters.exception.UnownedMonsterException;
-import INF3132.monsters.exception.MonsterUnableToFightException;
-import INF3132.attacks.Attack;
-import INF3132.attacks.exception.AttackFailedException;
-import INF3132.attacks.exception.SlippedAndFailedException;
 import INF3132.combat.Combat;
+import INF3132.combat.move.AttackMove;
+import INF3132.combat.move.CombatMove;
+import INF3132.combat.move.SwapMonsterMove;
+import INF3132.combat.move.UseConsumableMove;
 import INF3132.events.EventPublisher;
 import INF3132.events.VoidEvent;
 import INF3132.items.exception.UnownedItemException;
-import INF3132.items.exception.UnusableItemException;
 import INF3132.items.subclasses.Consumable;
+import INF3132.monsters.Monster;
+import INF3132.monsters.exception.MonsterUnableToFightException;
+import INF3132.monsters.exception.UnownedMonsterException;
 import INF3132.trainer.exception.InvalidTeamSetException;
 import INF3132.trainer.exception.TeamFullException;
 import INF3132.ui.Menu;
@@ -25,7 +25,7 @@ public class Trainer {
     public static final int TEAM_MAX_SIZE = 6;
 
     public EventPublisher<VoidEvent> giveUp;
-    public EventPublisher<VoidEvent> turnEnded;
+    public EventPublisher<CombatMove> turnEnded;
 
     private List<Monster> team = new ArrayList<Monster>();
     private Bag bag;
@@ -36,13 +36,27 @@ public class Trainer {
 	public Trainer(String name) {
         this.name = name;
         this.giveUp = new EventPublisher<VoidEvent>();
-        this.turnEnded = new EventPublisher<VoidEvent>();
+        this.turnEnded = new EventPublisher<>();
     }
 
     public void playTurn() {
-        currentFightingMonster.turnStartedHook();
-        Trainer opponent = Combat.getCurrentCombat().getOpponent();
-        Combat.getCurrentCombat().sendMessage(
+        Combat combat = Combat.getCurrentCombat();
+        Trainer opponent = combat.getOpponent();
+
+        // Current monster is KO : swap monster or
+        if (currentFightingMonster.getHp() <= 0) {
+            if (canFight()) {
+                Combat.getCurrentCombat().sendMessage(String.format("%s a un monstre KO et doit changer de monstre.", getName()));
+                forcedMonsterSwap();
+            } else {
+                Combat.getCurrentCombat().sendMessage(String.format("%s n'a plus de monstre en état de combattre !", getName()));
+                giveUp();
+                return;
+            }
+        }
+
+        System.out.println();
+        combat.sendMessage(
             String.format(
                 "%s joue avec %s contre le %s de %s.",
                 getName(),
@@ -55,19 +69,21 @@ public class Trainer {
         // "Swap monster" menu
         List<MenuItem> monstersMenuItem = new ArrayList<>();
         team.forEach(monster -> monstersMenuItem.add(
-            new MenuItem((monster == currentFightingMonster ? "(ACTUEL) " : "") + monster.getSummary()))
-        );
+            new MenuItem(
+                (monster == currentFightingMonster ? "(ACTUEL) " : "") + monster.getSummary(),
+                () -> {
+                    endTurn(new SwapMonsterMove(this, monster));
+                }
+            )
+        ));
         Menu monstersMenu = new Menu("Monstres", monstersMenuItem.toArray(MenuItem[]::new));
 
         // "Attack" menu
         List<MenuItem> attacksMenuItems = new ArrayList<>();
         currentFightingMonster.getAttacks().forEach(attack ->
             attacksMenuItems.add(new MenuItem(attack.getName(), () -> {
-                orderMonsterToAttack(
-                    currentFightingMonster,
-                    Combat.getCurrentCombat().getOpponent().getCurrentFightingMonster(),
-                    attack
-                );
+                Monster target = combat.getOpponent().getCurrentFightingMonster();
+                endTurn(new AttackMove(this, currentFightingMonster, target, attack));
             }))
         );
         Menu attacksMenu = new Menu("Attaques", attacksMenuItems.toArray(MenuItem[]::new));
@@ -78,7 +94,7 @@ public class Trainer {
         bag.getItems().forEach(item ->
             itemsMenuItems.add(new MenuItem(item.getName(), () -> {
                 try {
-                    useConsumable((Consumable) item, itemsMenu);
+                    promptConsumable((Consumable) item, itemsMenu);
                 } catch (UnownedItemException e) {
                     System.out.println("Vous ne possédez pas cet objet.");
                 }
@@ -87,23 +103,29 @@ public class Trainer {
         itemsMenu.setItems(itemsMenuItems.toArray(MenuItem[]::new));
 
 
-        MenuItem[] turnMenuItems = {
-            new MenuItem(
-                "Charger",
-                () -> {
-                    orderMonsterToAttack(
-                        currentFightingMonster,
-                        Combat.getCurrentCombat().getOpponent().getCurrentFightingMonster()
-                    );
-                }
-            ),
-            new MenuItem("Attaques spé.", attacksMenu),
-            new MenuItem("Objets", itemsMenu),
-            new MenuItem("Changer de monstre", monstersMenu),
-        };
+        MenuItem[] turnMenuItems;
+        if (currentFightingMonster.getHp() > 0) {
+            turnMenuItems = new MenuItem[]{
+                new MenuItem(
+                    "Charger",
+                    () -> {
+                        Monster target = combat.getOpponent().getCurrentFightingMonster();
+                        endTurn(new AttackMove(this, currentFightingMonster, target));
+                    }
+                ),
+                new MenuItem("Attaques spé.", attacksMenu),
+                new MenuItem("Objets", itemsMenu),
+                new MenuItem("Changer de monstre", monstersMenu),
+            };
+        } else {
+            // If monster is Knocked Out
+            turnMenuItems = new MenuItem[]{
+                new MenuItem("Changer de monstre", monstersMenu)
+            };
+        }
         Menu turnMenu = new Menu("Tour de " + getName(), turnMenuItems);
 
-        // IMPORTANT: Set all menu's parent to the main turn menu
+        // IMPORTANT: Set all menu's parent to the main turn menu, to be able to go back to it if needed.
         monstersMenu.setParent(turnMenu);
         attacksMenu.setParent(turnMenu);
         itemsMenu.setParent(turnMenu);
@@ -111,29 +133,31 @@ public class Trainer {
         turnMenu.prompt();
     }
 
-    protected void endTurn() {
-        System.out.println("end turn");
-        turnEnded.notifyListeners(new VoidEvent());
+    /**
+     * Checks if this trainer has monsters left to fight.
+     * @return {@code true} if they can fight, {@code false} otherwise.
+     */
+    public boolean canFight() {
+        for (Monster m : team) {
+            if (m.getHp() >= 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    /**
-     * Use a consumable on a monster
-     */
-    public void useConsumable(Consumable i, Menu backMenu) throws UnownedItemException {
+    protected void endTurn(CombatMove move) {
+        turnEnded.notifyListeners(move);
+    }
+
+    public void promptConsumable(Consumable i, Menu backMenu) throws UnownedItemException {
         if (!bag.itemIsOwn(i)) throw new UnownedItemException();
 
         List<MenuItem> monstersMenuItem = new ArrayList<>();
         team.forEach(monster -> monstersMenuItem.add(
             new MenuItem((monster == currentFightingMonster ? "(ACTUEL) " : "") + monster.getSummary(), () -> {
-                try {
-                    i.use(monster);
-                    bag.removeItem(i);
-                    Combat.getCurrentCombat().sendMessage(String.format("%s utilise %s sur %s !", this.getName(), i.getName(), monster.getName()));
-                } catch (UnusableItemException e) {
-                    Combat.getCurrentCombat().sendMessage(String.format("%s n'a eu aucun effet sur %s...", i.getName(), monster.getName()));
-                    bag.removeItem(i);
-                }
-                endTurn();
+                endTurn(new UseConsumableMove(this, i, monster));
             }))
         );
         Menu monstersMenu = new Menu("Utiliser sur quel monstre ?", monstersMenuItem.toArray(MenuItem[]::new), backMenu);
@@ -142,79 +166,46 @@ public class Trainer {
     }
 
     /**
-     * Order a Monster to attack with its base attack.
-     * @param source The {@link Monster} to command.
-     * @param target The {@link Monster} to attack.
-     */
-    public void orderMonsterToAttack(Monster source, Monster target) {
-        Combat combat = Combat.getCurrentCombat();
-        combat.sendMessage(String.format("%s charge %s !", source.getName(), target.getName()));
-
-        try {
-            int inflictedDamage = source.attack(target);
-            Combat.getCurrentCombat().sendMessage(String.format("%s inflige %d de dommages à %s.", source.getName(), inflictedDamage, target.getName()));
-        } catch (SlippedAndFailedException e) {
-            Combat.getCurrentCombat().sendMessage(
-                String.format(
-                    "%s de %s glisse à cause du terrain inondé et rate sa charge !",
-                    source.getName(),
-                    this.getName()
-                )
-            );
-        } catch (AttackFailedException e) {
-            Combat.getCurrentCombat().sendMessage(
-                String.format(
-                    "Mince, on dirait que la charge executée par %s de %s a échoué !",
-                    source.getName(),
-                    this.getName()
-                )
-            );
-        }
-        endTurn();
-    }
-
-    /**
-     * Order a Monster to attack with {@link Attack} {@param a}
-     * @param source The {@link Monster} to command.
-     * @param target The {@link Monster} to attack.
-     * @param attack The {@link Attack} to use.
-     */
-    public void orderMonsterToAttack(Monster source, Monster target, Attack attack) {
-        Combat combat = Combat.getCurrentCombat();
-        combat.sendMessage(String.format("%s attaque %s avec %s !", source.getName(), target.getName(), attack.getName()));
-
-        try {
-            int inflictedDamage = source.attack(target, attack);
-            Combat.getCurrentCombat().sendMessage(String.format("%s inflige %d de dommages à %s.", source.getName(), inflictedDamage, target.getName()));
-        } catch (SlippedAndFailedException e) {
-            Combat.getCurrentCombat().sendMessage(
-                String.format(
-                    "%s de %s glisse à cause du terrain inondé et rate son attaque !",
-                    source.getName(),
-                    this.getName()
-                )
-            );
-        } catch (AttackFailedException e) {
-            Combat.getCurrentCombat().sendMessage(
-                String.format(
-                    "Mince, l'attaque lancée par %s de %s a échoué !",
-                    source.getName(),
-                    this.getName()
-                )
-            );
-        }
-        endTurn();
-    }
-
-    /**
-     * Swap the current fighting monster to {@param m}
+     * Swap the current fighting monster to {@param m}.
+     * To be used in the context of a strategic move and not a forced swap.
      * @param m The monster to make fighting in place of the current monster.
      */
-    public void swapPokemon(Monster m) throws UnownedMonsterException, MonsterUnableToFightException {
+    public void swapCurrentFightingMonster(Monster m) throws UnownedMonsterException, MonsterUnableToFightException {
         if (!monsterIsOwned(m)) throw new UnownedMonsterException();
         if (m.getHp() <= 0) throw new MonsterUnableToFightException();
 
         currentFightingMonster = m;
+    }
+
+    /**
+     * Swap the current monster.
+     * Use this when the current fighting monster is unable to fight
+     * and you need to switch to one that's OK.
+     */
+    public void forcedMonsterSwap() {
+        List<Monster> availableMonsters = new ArrayList<>();
+        for (Monster m : team) {
+            if (m.getHp() > 0 && m != currentFightingMonster) availableMonsters.add(m);
+        }
+
+        List<MenuItem> monstersMenuItems = new ArrayList<>();
+        availableMonsters.forEach(monster -> monstersMenuItems.add(
+            new MenuItem(monster.getSummary(), () -> {
+                try {
+                    swapCurrentFightingMonster(monster);
+                    Combat.getCurrentCombat().sendMessage(String.format(
+                        "%s envoie %s sur le terrain.",
+                        getName(),
+                        monster.getName()
+                    ));
+                } catch (MonsterUnableToFightException | UnownedMonsterException e) {
+                    e.printStackTrace();
+                }
+            })
+        ));
+        Menu monstersMenu = new Menu("Choisissez un nouveau monstre", monstersMenuItems.toArray(MenuItem[]::new));
+
+        monstersMenu.prompt();
     }
 
     public void giveUp() {
@@ -275,9 +266,12 @@ public class Trainer {
         return currentFightingMonster;
     }
 
+    public Bag getBag() {
+        return this.bag;
+    }
+
     public void setBag(Bag bag) {
         this.bag = bag;
     }
-
 }
 
