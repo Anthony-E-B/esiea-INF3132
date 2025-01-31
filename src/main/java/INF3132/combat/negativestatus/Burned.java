@@ -13,17 +13,17 @@ public class Burned extends NegativeStatus {
     public void turnStartedHook() {
         Monster m = getMonster();
         Combat c = getCombat();
-        m.inflictDamage(
-            Math.round(m.getAttack() / 10)
-        );
-        c.sendMessage(
-            String.format("%s souffre de sa brûlure !", m.getName())
-        );
+
+        m.inflictDamage(Math.round(m.getAttack() / 10));
+
+        c.sendMessage(String.format(
+            "%s souffre de sa brûlure !", m.getName()
+        ));
 
         if (c.getTerrain().isFlooded()) {
             c.sendMessage(String.format(
-                        "%s n'est plus brûlé grâce à l'inondation du terrain.", m.getName()
-                        ));
+                "%s n'est plus brûlé grâce à l'inondation du terrain.", m.getName()
+            ));
             m.disposeNegativeStatus(this);
         }
 

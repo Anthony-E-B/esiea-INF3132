@@ -247,9 +247,9 @@ public abstract class Monster {
         if (negativeStatus != null) negativeStatus.afterAttackHook(inflictedDamage);
     }
 
-    public void disposeNegativeStatus(NegativeStatus status) {
-        if (negativeStatus == status) {
-            negativeStatus = null;
+    public void disposeNegativeStatus(NegativeStatus negativeStatus) {
+        if (this.negativeStatus == negativeStatus) {
+            this.negativeStatus = null;
         }
     }
 
