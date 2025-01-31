@@ -40,6 +40,7 @@ public class Trainer {
     }
 
     public void playTurn() {
+        currentFightingMonster.turnStartedHook();
         Trainer opponent = Combat.getCurrentCombat().getOpponent();
         Combat.getCurrentCombat().sendMessage(
             String.format(
