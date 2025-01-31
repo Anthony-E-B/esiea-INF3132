@@ -40,12 +40,12 @@ public abstract class Monster {
     /**
      * A type this monster is weak against
      */
-    private AttackType weakType = null;
+    protected AttackType weakType = null;
 
     /**
      * A type this monster is strong against.
      */
-    private AttackType strongType = null;
+    protected AttackType strongType = null;
 
     public Monster(
         String name,
@@ -119,11 +119,11 @@ public abstract class Monster {
         AttackType attackType = a.getType();
         Combat combat = Combat.getCurrentCombat();
 
-        if (attackType == weakType) {
+        if (attackType == strongType) {
             avantage = 0.5f;
             combat.sendMessage("Ce n'est pas très efficace...");
         }
-        else if (attackType == strongType) {
+        else if (attackType == weakType) {
             avantage = 2.0f;
             combat.sendMessage("C'est super efficace !");
         }
@@ -349,6 +349,14 @@ public abstract class Monster {
 
     public void drinkPotion(Potion p) throws UnusableItemException {
         p.use(this);
+    }
+
+    protected void setWeakType(AttackType attackType) {
+        this.weakType = attackType;
+    }
+
+    protected void setStrongType(AttackType attackType) {
+        this.strongType = attackType;
     }
 
     public String getSummary() {

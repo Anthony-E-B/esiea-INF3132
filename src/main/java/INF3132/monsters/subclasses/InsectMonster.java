@@ -20,6 +20,8 @@ public class InsectMonster extends NatureMonster {
         List<Attack> attacks
     ) {
         super(name, MonsterType.INSECT, hpMax, attack, defense, speed, attacks);
+        this.setWeakType(AttackType.FIRE);
+        this.setStrongType(AttackType.GROUND);
     }
 
     @Override

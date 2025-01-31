@@ -14,6 +14,8 @@ public class FireMonster extends Monster implements FloodAffectedMonster {
 
     public FireMonster(String name, int hpMax, int attack, int defense, int speed, List<Attack> attacks) {
         super(name, MonsterType.FIRE, hpMax, attack, defense, speed, attacks);
+        this.setWeakType(AttackType.WATER);
+        this.setStrongType(AttackType.NATURE);
     }
 
     @Override
