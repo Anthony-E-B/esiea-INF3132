@@ -247,9 +247,9 @@ public abstract class Monster {
         if (negativeStatus != null) negativeStatus.afterAttackHook(inflictedDamage);
     }
 
-    public void disposeNegativeStatus(NegativeStatus status) {
-        if (negativeStatus == status) {
-            negativeStatus = null;
+    public void disposeNegativeStatus(NegativeStatus negativeStatus) {
+        if (this.negativeStatus == negativeStatus) {
+            this.negativeStatus = null;
         }
     }
 
@@ -324,9 +324,13 @@ public abstract class Monster {
      * This will only work if the {@link Monster} is not currently affected by a negative status.
      * @see NegativeStatus
      */
-    public void trySetNegativeStatus(NegativeStatus ns) {
-        if (this.negativeStatus == null) this.negativeStatus = ns;
-        return;
+    public boolean trySetNegativeStatus(NegativeStatus ns) {
+        if (this.negativeStatus == null) {
+            this.negativeStatus = ns;
+            return true;
+        }
+
+        return false;
     }
 
     /**
