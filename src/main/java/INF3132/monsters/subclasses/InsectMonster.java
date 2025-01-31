@@ -4,15 +4,12 @@ import java.util.List;
 
 import INF3132.attacks.Attack;
 import INF3132.attacks.AttackType;
-import INF3132.attacks.exception.AttackFailedException;
 import INF3132.combat.Combat;
 import INF3132.combat.negativestatus.Poison;
-import INF3132.combat.terrain.Terrain;
-import INF3132.monsters.FloodAffectedMonster;
 import INF3132.monsters.Monster;
 import INF3132.monsters.MonsterType;
 
-public class InsectMonster extends Monster implements FloodAffectedMonster {
+public class InsectMonster extends NatureMonster {
 
     public InsectMonster(
         String name,
@@ -26,35 +23,24 @@ public class InsectMonster extends Monster implements FloodAffectedMonster {
     }
 
     @Override
-    public void startTurn() {
-        Combat c = Combat.getCurrentCombat();
-        Terrain t = c.getTerrain();
-        if(t.isFlooded()){
-            c.sendMessage(String.format(
-                "%s se regénère grâce au terrain inondé !",
-                this.getName()
-            ));
-            this.restoreHealth(this.getMaxHp()/20);
-        }
-    }
-
-    @Override
     public void afterAttack(float inflictedDamage){
         this.afterAttack(inflictedDamage, null);
     }
 
     @Override
-    public void afterAttack(float inflictedDamage, Attack a) {
-        super.afterAttack(inflictedDamage, a);
+    public void afterAttack(float inflictedDamage, Attack attack) {
+        super.afterAttack(inflictedDamage, attack);
 
-        if (a == null || a.getType() != AttackType.NATURE) return;
+        if (attack == null || attack.getType() != AttackType.NATURE) return;
+
         Combat c = Combat.getCurrentCombat();
-        Monster m = c.getOpponent().getCurrentFightingMonster();
-        if (m.getNegativeStatus() == null){
-            Poison p = new Poison(m, c);
-            m.setNegativeStatus(p);
+        Monster opponent = c.getOpponent().getCurrentFightingMonster();
+
+        if (opponent.getNegativeStatus() == null){
+            Poison poisonStatus = new Poison(opponent, c);
+            opponent.trySetNegativeStatus(poisonStatus);
             c.sendMessage(String.format(
-                    "%s est empoisonné !", m.getName()
+                "%s est empoisonné !", opponent.getName()
             ));
         }
     }
