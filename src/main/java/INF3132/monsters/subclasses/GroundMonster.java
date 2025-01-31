@@ -22,6 +22,8 @@ public class GroundMonster extends Monster implements FloodAffectedMonster {
         List<Attack> attacks
     ) {
         super(name, MonsterType.GROUND, hpMax, attack, defense, speed, attacks);
+        this.setWeakType(AttackType.NATURE);
+        this.setStrongType(AttackType.ELECTRIC);
     }
 
     @Override

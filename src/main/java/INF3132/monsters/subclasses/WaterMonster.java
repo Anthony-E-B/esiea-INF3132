@@ -25,6 +25,8 @@ public class WaterMonster extends Monster {
         super(name, MonsterType.WATER, hpMax, attack, defense, speed, attacks);
         this.flood = flood;
         this.fall = fall;
+        this.setWeakType(AttackType.ELECTRIC);
+        this.setStrongType(AttackType.FIRE);
     }
 
     @Override

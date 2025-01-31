@@ -11,11 +11,21 @@ public class Poison extends NegativeStatus {
 
     @Override
     public void turnStartedHook() {
-        getMonster().inflictDamage(
-            Math.round(getMonster().getAttack() / 10)
+        Combat c = getCombat();
+        Monster m = getMonster();
+
+        m.inflictDamage(
+            Math.round(m.getAttack() / 10)
         );
-        getCombat().sendMessage(
+        c.sendMessage(
             String.format("%s souffre du poison !", getMonster().getName())
         );
+
+        if (c.getTerrain().isFlooded()) {
+            c.sendMessage(String.format(
+                "%s est guéri du poison par le terrain inondé.", m.getName()
+            ));
+            m.disposeNegativeStatus(this);
+        }
     }
 }
