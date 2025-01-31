@@ -16,14 +16,13 @@ public class AttackMove implements CombatMove {
     private Monster target;
     private Attack attack;
 
-    public AttackMove(Trainer t, Monster source, Monster target) {
-        this(t, source, target, null);
+    public AttackMove(Trainer t, Monster source) {
+        this(t, source, null);
     }
 
-    public AttackMove(Trainer t, Monster source, Monster target, Attack a) {
+    public AttackMove(Trainer t, Monster source, Attack a) {
         this.trainer = t;
         this.source = source;
-        this.target = target;
         this.attack = a;
     }
 
@@ -34,8 +33,6 @@ public class AttackMove implements CombatMove {
 
 	@Override
 	public void execute() {
-        Combat combat = Combat.getCurrentCombat();
-
         if (attack != null) attack();
         else charge();
 	}
@@ -95,6 +92,10 @@ public class AttackMove implements CombatMove {
     @Override
     public Monster getAttacker() {
         return source;
+    }
+
+    public void setTarget(Monster target) {
+        this.target = target;
     }
 
     @Override

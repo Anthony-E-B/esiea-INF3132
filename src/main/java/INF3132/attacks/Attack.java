@@ -7,8 +7,9 @@ public class Attack {
 
     private int power;
     private int nbUse;
+    private int nbUseMax;
 
-    private final float failRate;
+	private final float failRate;
 
     private final AttackType type;
 
@@ -22,6 +23,7 @@ public class Attack {
         this.name = name;
         this.type = type;
         this.power = power;
+        this.nbUseMax = nbUse;
         this.nbUse = nbUse;
         this.failRate = fail;
     }
@@ -56,5 +58,13 @@ public class Attack {
 
     public float getFailRate() {
         return failRate;
+    }
+
+    public int getNbUseMax() {
+		return nbUseMax;
+	}
+
+    public void useOnce() {
+        nbUse--;
     }
 }

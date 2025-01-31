@@ -21,4 +21,6 @@ public interface CombatMove {
     default Monster getTarget() {
         return null;
     }
+
+    default void setTarget(Monster m) { }
 }

@@ -26,7 +26,9 @@ public class Combat {
 
     private List<CombatMove> trainersMoves;
 
-    public Combat(Trainer t1, Trainer t2) {
+    private CombatMove currentMove;
+
+	public Combat(Trainer t1, Trainer t2) {
         turnChanged =  new EventPublisher<Integer>();
         trainersMoves = new ArrayList<>();
         currentTurn = 0;
@@ -81,6 +83,18 @@ public class Combat {
                 break; // Combat ended - Exit out of the loop.
             }
 
+            if (movesSelected == 0) {
+                Monster m = currentTrainer.getCurrentFightingMonster();
+                if (!m.isKO() && m.getNegativeStatus() != null) {
+                    m.getNegativeStatus().turnStartedHook();
+                }
+
+                m = opponent.getCurrentFightingMonster();
+                if (!m.isKO() && m.getNegativeStatus() != null) {
+                    m.getNegativeStatus().turnStartedHook();
+                }
+            }
+
             // Swap trainer
             Trainer priorityTrainer = determinePriorityTrainer();
             if (priorityTrainer != null) {
@@ -104,16 +118,15 @@ public class Combat {
                 if (movesAreBothAttackMove()) {
                     // If both moves are attack moves, sort them by the speed of the monsters
                     trainersMoves.sort((a, b) -> Integer.compare(
-                        a.getAttacker().getSpeed(),
-                        b.getAttacker().getSpeed()
+                        b.getAttacker().getSpeed(),
+                        a.getAttacker().getSpeed()
                     ));
                 } else { // Sort moves by priority
                     trainersMoves.sort((a, b) -> Integer.compare(b.getPriority(), a.getPriority()));
                 }
 
                 for (CombatMove move : trainersMoves) {
-                    Monster attacker = move.getAttacker();
-                    Monster target = move.getTarget();
+                    currentMove = move;
 
                     if (!(move instanceof AttackMove)) {
                         move.execute();
@@ -121,11 +134,14 @@ public class Combat {
                     }
 
                     // NOTE: From now on, treat AttackMove specific logic
+                    Monster attacker = move.getAttacker();
+                    Monster target = t1.getCurrentFightingMonster() == attacker ? t2.getCurrentFightingMonster() : t1.getCurrentFightingMonster();
+                    move.setTarget(target);
 
                     // Ensures that a dead monster cannot attack
                     if (attacker != null && attacker.getHp() <= 0) {
                         sendMessage(String.format(
-                            "%s est K.O et ne peut pas agir !", attacker.getName()
+                            "%s est K.O. et ne peut pas agir !", attacker.getName()
                         ));
                         continue;
                     }
@@ -146,6 +162,7 @@ public class Combat {
                         break;
                     }
                 }
+                currentMove = null;
                 trainersMoves.clear();
             }
         }
@@ -259,4 +276,8 @@ public class Combat {
     public Trainer getOpponent() {
         return this.opponent;
     }
+
+    public CombatMove getCurrentMove() {
+		return currentMove;
+	}
 }

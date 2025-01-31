@@ -79,14 +79,22 @@ public class Trainer {
         Menu monstersMenu = new Menu("Monstres", monstersMenuItem.toArray(MenuItem[]::new));
 
         // "Attack" menu
+        Menu attacksMenu = new Menu("Attaques");
         List<MenuItem> attacksMenuItems = new ArrayList<>();
-        currentFightingMonster.getAttacks().forEach(attack ->
-            attacksMenuItems.add(new MenuItem(attack.getName(), () -> {
-                Monster target = combat.getOpponent().getCurrentFightingMonster();
-                endTurn(new AttackMove(this, currentFightingMonster, target, attack));
-            }))
-        );
-        Menu attacksMenu = new Menu("Attaques", attacksMenuItems.toArray(MenuItem[]::new));
+        currentFightingMonster.getAttacks().forEach(attack -> {
+                attacksMenuItems.add(new MenuItem(
+                    String.format("%s (%d/%d)", attack.getName(), attack.getNbUse(), attack.getNbUseMax()),
+                    () -> {
+                        if (attack.getNbUse() > 0) {
+                            endTurn(new AttackMove(this, currentFightingMonster, attack));
+                        } else {
+                            combat.sendMessage(String.format("L'attaque %s n'est plus disponible !", attack.getName()));
+                            attacksMenu.prompt();
+                        }
+                    })
+                );
+        });
+        attacksMenu.setItems(attacksMenuItems.toArray(MenuItem[]::new));
 
         // "Items" menu
         List<MenuItem> itemsMenuItems = new ArrayList<>();
@@ -109,8 +117,7 @@ public class Trainer {
                 new MenuItem(
                     "Charger",
                     () -> {
-                        Monster target = combat.getOpponent().getCurrentFightingMonster();
-                        endTurn(new AttackMove(this, currentFightingMonster, target));
+                        endTurn(new AttackMove(this, currentFightingMonster));
                     }
                 ),
                 new MenuItem("Attaques spé.", attacksMenu),
