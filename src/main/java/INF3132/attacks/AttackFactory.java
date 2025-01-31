@@ -24,7 +24,7 @@ public class AttackFactory {
     }
 
     public Attack create() {
-        return new Attack(name, type, power, 0, failRate);
+        return new Attack(name, type, power, nbUseMax, failRate);
     }
 
     public String getName() {

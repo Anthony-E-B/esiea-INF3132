@@ -36,7 +36,7 @@ public class InsectMonster extends NatureMonster {
         if (attack == null || attack.getType() != AttackType.NATURE) return;
 
         Combat c = Combat.getCurrentCombat();
-        Monster opponent = c.getOpponent().getCurrentFightingMonster();
+        Monster opponent = c.getCurrentMove().getTarget();
 
         if (opponent.getNegativeStatus() == null){
             Poison poisonStatus = new Poison(opponent, c);

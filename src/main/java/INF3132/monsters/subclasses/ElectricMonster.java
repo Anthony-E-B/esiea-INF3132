@@ -40,7 +40,7 @@ public class ElectricMonster extends Monster implements FloodAffectedMonster {
         if (a == null || a.getType() != AttackType.ELECTRIC) return;
 
         Combat c = Combat.getCurrentCombat();
-        Monster m = c.getOpponent().getCurrentFightingMonster();
+        Monster m = c.getCurrentMove().getTarget();
 
         if (m.getNegativeStatus() == null) {
 

@@ -30,7 +30,7 @@ public class FireMonster extends Monster implements FloodAffectedMonster {
         if (a == null || a.getType() != AttackType.FIRE) return;
 
         Combat c = Combat.getCurrentCombat();
-        Monster m = c.getOpponent().getCurrentFightingMonster();
+        Monster m = c.getCurrentMove().getTarget();
 
         if (m.getNegativeStatus() == null) {
             Burned b = new Burned(m, c);
