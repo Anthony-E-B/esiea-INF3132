@@ -40,8 +40,23 @@ public class Trainer {
     }
 
     public void playTurn() {
-        Trainer opponent = Combat.getCurrentCombat().getOpponent();
-        Combat.getCurrentCombat().sendMessage(
+        Combat combat = Combat.getCurrentCombat();
+        Trainer opponent = combat.getOpponent();
+
+        // Current monster is KO : swap monster or
+        if (currentFightingMonster.getHp() <= 0) {
+            if (canFight()) {
+                Combat.getCurrentCombat().sendMessage(String.format("%s a un monstre KO et doit changer de monstre.", getName()));
+                forcedMonsterSwap();
+            } else {
+                Combat.getCurrentCombat().sendMessage(String.format("%s n'a plus de monstre en état de combattre !", getName()));
+                giveUp();
+                return;
+            }
+        }
+
+        System.out.println();
+        combat.sendMessage(
             String.format(
                 "%s joue avec %s contre le %s de %s.",
                 getName(),
@@ -50,17 +65,6 @@ public class Trainer {
                 opponent.getName()
             )
         );
-
-        // Check if the Monster is able to fight
-        if (currentFightingMonster.getHp() <= 0) {
-            Combat.getCurrentCombat().sendMessage(String.format("%s a un Pokémon KO et doit changer de monstre.", getName()));
-            boolean switched = switchToAnotherMonster();
-            if (!switched) {
-                Combat.getCurrentCombat().sendMessage(String.format("%s n'a plus de Pokémon en état de combattre !", getName()));
-                Combat.getCurrentCombat().setWinner(Combat.getCurrentCombat().getOpponent());
-                return;
-            }
-        }
 
         // "Swap monster" menu
         List<MenuItem> monstersMenuItem = new ArrayList<>();
@@ -78,7 +82,7 @@ public class Trainer {
         List<MenuItem> attacksMenuItems = new ArrayList<>();
         currentFightingMonster.getAttacks().forEach(attack ->
             attacksMenuItems.add(new MenuItem(attack.getName(), () -> {
-                Monster target = Combat.getCurrentCombat().getOpponent().getCurrentFightingMonster();
+                Monster target = combat.getOpponent().getCurrentFightingMonster();
                 endTurn(new AttackMove(this, currentFightingMonster, target, attack));
             }))
         );
@@ -105,7 +109,7 @@ public class Trainer {
                 new MenuItem(
                     "Charger",
                     () -> {
-                        Monster target = Combat.getCurrentCombat().getOpponent().getCurrentFightingMonster();
+                        Monster target = combat.getOpponent().getCurrentFightingMonster();
                         endTurn(new AttackMove(this, currentFightingMonster, target));
                     }
                 ),
@@ -129,6 +133,20 @@ public class Trainer {
         turnMenu.prompt();
     }
 
+    /**
+     * Checks if this trainer has monsters left to fight.
+     * @return {@code true} if they can fight, {@code false} otherwise.
+     */
+    public boolean canFight() {
+        for (Monster m : team) {
+            if (m.getHp() >= 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     protected void endTurn(CombatMove move) {
         turnEnded.notifyListeners(move);
     }
@@ -148,7 +166,8 @@ public class Trainer {
     }
 
     /**
-     * Swap the current fighting monster to {@param m}
+     * Swap the current fighting monster to {@param m}.
+     * To be used in the context of a strategic move and not a forced swap.
      * @param m The monster to make fighting in place of the current monster.
      */
     public void swapCurrentFightingMonster(Monster m) throws UnownedMonsterException, MonsterUnableToFightException {
@@ -158,30 +177,35 @@ public class Trainer {
         currentFightingMonster = m;
     }
 
-
-    public boolean switchToAnotherMonster() {
+    /**
+     * Swap the current monster.
+     * Use this when the current fighting monster is unable to fight
+     * and you need to switch to one that's OK.
+     */
+    public void forcedMonsterSwap() {
         List<Monster> availableMonsters = new ArrayList<>();
         for (Monster m : team) {
             if (m.getHp() > 0 && m != currentFightingMonster) availableMonsters.add(m);
         }
-
-        if (availableMonsters.isEmpty()) return false;
 
         List<MenuItem> monstersMenuItems = new ArrayList<>();
         availableMonsters.forEach(monster -> monstersMenuItems.add(
             new MenuItem(monster.getSummary(), () -> {
                 try {
                     swapCurrentFightingMonster(monster);
-                    endTurn(new SwapMonsterMove(this, monster));
-                    Combat.getCurrentCombat().sendMessage(String.format("%s envoie %s sur le terrain.", getName(), monster.getName()));
+                    Combat.getCurrentCombat().sendMessage(String.format(
+                        "%s envoie %s sur le terrain.",
+                        getName(),
+                        monster.getName()
+                    ));
                 } catch (MonsterUnableToFightException | UnownedMonsterException e) {
                     e.printStackTrace();
                 }
             })
         ));
         Menu monstersMenu = new Menu("Choisissez un nouveau monstre", monstersMenuItems.toArray(MenuItem[]::new));
+
         monstersMenu.prompt();
-        return currentFightingMonster.getHp() > 0;
     }
 
     public void giveUp() {

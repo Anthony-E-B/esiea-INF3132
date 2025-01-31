@@ -37,7 +37,10 @@ public class Menu {
 
     protected void displayItems() {
         System.out.println();
-        System.out.println(String.format("MENU : %s", getName()));
+        String menuLine = String.format("==== %s ", getName());
+        for (int i = 0; i < Math.max(50 - getName().length(), 3); i++) menuLine += "=";
+        System.out.println(menuLine);
+        System.out.println();
 
         if (parent != null) {
             System.out.println();

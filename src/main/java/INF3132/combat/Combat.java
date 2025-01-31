@@ -1,5 +1,6 @@
 package INF3132.combat;
 
+import INF3132.combat.move.AttackMove;
 import INF3132.combat.move.CombatMove;
 import INF3132.combat.terrain.Terrain;
 import INF3132.events.EventPublisher;
@@ -53,8 +54,8 @@ public class Combat {
     }
 
     public void start() {
-        t1.giveUp.addListener(ve -> onGiveUp(t1));
-        t2.giveUp.addListener(ve -> onGiveUp(t2));
+        t1.giveUp.addListener(voidEvent -> onGiveUp(t1));
+        t2.giveUp.addListener(voidEvent -> onGiveUp(t2));
 
         t1.turnEnded.addListener(this::onMoveSelected);
         t2.turnEnded.addListener(this::onMoveSelected);
@@ -94,43 +95,74 @@ public class Combat {
             currentTrainer.playTurn();
             movesSelected++;
 
-            // Every player chose their move : play them in order of priority, and reset.
+            // Every player have chosen their move : play them in order of priority, and reset.
             if (movesSelected == 2) {
                 currentTurn++;
                 turnChanged.notifyListeners(currentTurn);
                 movesSelected = 0;
 
-                // Sort moves by priority
-                trainersMoves.sort((a, b) -> Integer.compare(b.getPriority(), a.getPriority()));
+                if (movesAreBothAttackMove()) {
+                    // If both moves are attack moves, sort them by the speed of the monsters
+                    trainersMoves.sort((a, b) -> Integer.compare(
+                        a.getAttacker().getSpeed(),
+                        b.getAttacker().getSpeed()
+                    ));
+                } else { // Sort moves by priority
+                    trainersMoves.sort((a, b) -> Integer.compare(b.getPriority(), a.getPriority()));
+                }
+
                 for (CombatMove move : trainersMoves) {
                     Monster attacker = move.getAttacker();
                     Monster target = move.getTarget();
+
+                    if (!(move instanceof AttackMove)) {
+                        move.execute();
+                        continue;
+                    }
+
+                    // NOTE: From now on, treat AttackMove specific logic
+
                     // Ensures that a dead monster cannot attack
                     if (attacker != null && attacker.getHp() <= 0) {
                         sendMessage(String.format(
-                                    "%s est K.O et ne peut pas agir !", attacker.getName()
-                                    ));
+                            "%s est K.O et ne peut pas agir !", attacker.getName()
+                        ));
                         continue;
                     }
+
                     // Ensures that you can not attack a dead monster
                     if (target != null && target.getHp() <= 0) {
                         sendMessage(String.format(
-                                    "%s est déjà K.O. !", target.getName()
-                                    ));
+                            "%s est déjà K.O. !", target.getName()
+                        ));
                         continue;
                     }
+
                     move.execute();
-                    // Log after move
                     if (target != null && target.getHp() <= 0) {
                         sendMessage(String.format(
-                                    "%s est mis K.O. !", target.getName()
-                                    ));
-                    break;
-                }
+                            "%s est mis K.O. !", target.getName()
+                        ));
+                        break;
+                    }
                 }
                 trainersMoves.clear();
             }
         }
+    }
+
+    /**
+     * Checks if both selected {@link CombatMove} are attack moves.
+     * @see AttackMove
+     */
+    public boolean movesAreBothAttackMove() {
+        for (CombatMove move : trainersMoves) {
+            if (!(move instanceof AttackMove)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
