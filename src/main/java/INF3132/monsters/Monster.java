@@ -5,10 +5,14 @@ import INF3132.attacks.AttackType;
 import INF3132.attacks.exception.AttackFailedException;
 import INF3132.attacks.exception.SlippedAndFailedException;
 import INF3132.items.exception.UnusableItemException;
+import INF3132.items.subclasses.Medecine;
 import INF3132.items.subclasses.Potion;
 import INF3132.monsters.subclasses.WaterMonster;
 import INF3132.combat.Combat;
+import INF3132.combat.negativestatus.Burned;
 import INF3132.combat.negativestatus.NegativeStatus;
+import INF3132.combat.negativestatus.Paralysis;
+import INF3132.combat.negativestatus.Poison;
 import INF3132.combat.terrain.Terrain;
 import INF3132.events.EventPublisher;
 import INF3132.events.VoidEvent;
@@ -29,7 +33,6 @@ public abstract class Monster {
     private int speed;
 
     private final List<Attack> attacks;
-    private Status status;
     private final MonsterType type;
 
     private NegativeStatus negativeStatus;
@@ -64,19 +67,6 @@ public abstract class Monster {
         int speed,
         List<Attack> attacks
     ) {
-        this(name, type, maxHp, attack, defense, speed, attacks, null);
-    }
-
-    public Monster(
-        String name,
-        MonsterType type,
-        int maxHp,
-        int attack,
-        int defense,
-        int speed,
-        List<Attack> attacks,
-        Status status
-    ) {
         this.name = name;
         this.type = type;
         this.maxHp = maxHp;
@@ -84,7 +74,6 @@ public abstract class Monster {
         this.defense = defense;
         this.speed = speed;
         this.attacks = attacks;
-        this.status = status;
         this.hp = maxHp;
 
         this.died = new EventPublisher<>();
@@ -151,6 +140,10 @@ public abstract class Monster {
 
         inflictDamage(roundedDamage);
         return roundedDamage;
+    }
+
+    public void turnStartedHook() {
+        // This functions is intented to be overridden for handling of special behaviours
     }
 
     /**
@@ -316,11 +309,33 @@ public abstract class Monster {
 
     // Status
     public Status getStatus() {
-        return status;
+        if (negativeStatus instanceof Poison)       return Status.POISON;
+        if (negativeStatus instanceof Burned)       return Status.BURNED;
+        if (negativeStatus instanceof Paralysis)    return Status.BURNED;
+        return null;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public NegativeStatus getNegativeStatus(){
+        return this.negativeStatus;
+    }
+
+    /**
+     * Try and set the negative status to a new value.
+     * This will only work if the {@link Monster} is not currently affected by a negative status.
+     * @see NegativeStatus
+     */
+    public void trySetNegativeStatus(NegativeStatus ns) {
+        if (this.negativeStatus == null) this.negativeStatus = ns;
+        return;
+    }
+
+    /**
+     * Reset negative status with an appropriate medecine
+     */
+    public void resetNegativeStatus(Medecine medecine) {
+        if (medecine.getStatus() == getStatus()) {
+            this.negativeStatus = null;
+        }
     }
 
     // Type
@@ -334,7 +349,7 @@ public abstract class Monster {
 
     public String getSummary() {
         String summary = String.format("%s (Type %s, santé : %d/%d", getName(), getType().toString(), getHp(), getMaxHp());
-        summary += status != null ? String.format(" %s)", status.toString()) : ")";
+        summary += getStatus() != null ? String.format(" %s)", getStatus().toString()) : ")";
         return summary;
     }
 }
