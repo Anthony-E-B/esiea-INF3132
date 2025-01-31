@@ -4,7 +4,14 @@ Ce projet est un jeu "Pokémon-like" développé par Anthony BERTRAND et Perrin 
 
 ## Comment jouer ?
 
-Pour jouer au jeu, il faut d'abord le compiler à l'aide de la commande "javac -encoding utf-8 -d target/classes -sourcepath src/main/java src/main/Java/INF3132/App.java", puis copier/coller les ressources présentes dans ./src/main/resources/ dans ./target/classes/. Enfin, le programme est lançable depuis ce dossier (./target/classes/) en faisant "java -cp ./ INF3132.App". 
+Pour jouer au jeu, il faut d'abord le compiler :
+javac -encoding utf-8 -d target/classes -sourcepath src/main/java src/main/Java/INF3132/App.java
+
+puis copier/coller les ressources présentes dans ./src/main/resources/ dans ./target/classes/ : 
+
+cp ./src/main/resources/* ./target/classes/
+
+Enfin, le programme est lançable depuis ce dossier (./target/classes/) en faisant "java -cp ./ INF3132.App". 
 
 Il est ensuite possible de lancer le jeu en entrant 1 dans le terminal qui s'affiche, ou bien d'afficher les différentes informations propres au jeu avec 2.
 

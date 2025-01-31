@@ -4,7 +4,6 @@ import INF3132.attacks.Attack;
 import INF3132.attacks.AttackType;
 import INF3132.attacks.exception.AttackFailedException;
 import INF3132.attacks.exception.SlippedAndFailedException;
-import INF3132.attacks.exception.WornOutAttackException;
 import INF3132.items.exception.UnusableItemException;
 import INF3132.items.subclasses.Medecine;
 import INF3132.items.subclasses.Potion;
