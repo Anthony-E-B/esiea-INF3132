@@ -311,7 +311,7 @@ public abstract class Monster {
     public Status getStatus() {
         if (negativeStatus instanceof Poison)       return Status.POISON;
         if (negativeStatus instanceof Burned)       return Status.BURNED;
-        if (negativeStatus instanceof Paralysis)    return Status.BURNED;
+        if (negativeStatus instanceof Paralysis)    return Status.PARALYSIS;
         return null;
     }
 
