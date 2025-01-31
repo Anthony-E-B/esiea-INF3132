@@ -1,8 +1,10 @@
 package INF3132.parser;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,7 +20,12 @@ public abstract class BaseParser<T> {
     private final BufferedReader reader;
 
     public BaseParser(String path) throws IOException {
-        this.reader = new BufferedReader(new FileReader(path));
+        this.reader = new BufferedReader(
+            new InputStreamReader(
+                new FileInputStream(path),
+                StandardCharsets.UTF_8
+            )
+        );
     }
 
     protected abstract T parseBlock(Map<String, String> blockData);
