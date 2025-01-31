@@ -38,10 +38,13 @@ public class InsectMonster extends NatureMonster {
 
         if (opponent.getNegativeStatus() == null){
             Poison poisonStatus = new Poison(opponent, c);
-            opponent.trySetNegativeStatus(poisonStatus);
-            c.sendMessage(String.format(
-                "%s est empoisonné !", opponent.getName()
-            ));
+            boolean newNegativeStatusSet = opponent.trySetNegativeStatus(poisonStatus);
+
+            if (newNegativeStatusSet) {
+                c.sendMessage(String.format(
+                    "%s est empoisonné !", opponent.getName()
+                ));
+            }
         }
     }
 }

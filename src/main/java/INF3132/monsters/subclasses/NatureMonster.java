@@ -32,9 +32,10 @@ public abstract class NatureMonster extends Monster implements FloodAffectedMons
         if (t.isFlooded()) {
             c.sendMessage(String.format(
                 "%s se regénère grâce au terrain inondé !",
-                this.getName()
+                getName()
             ));
-            this.restoreHealth(this.getMaxHp()/20);
+
+            restoreHealth(this.getMaxHp()/20);
         }
     }
 }

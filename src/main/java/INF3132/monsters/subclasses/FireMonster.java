@@ -32,10 +32,13 @@ public class FireMonster extends Monster implements FloodAffectedMonster {
 
         if (m.getNegativeStatus() == null) {
             Burned b = new Burned(m, c);
-            m.setNegativeStatus(b);
-            c.sendMessage(String.format(
-                        "%s est brûlé !", m.getName()
-                        ));
+            boolean newNegativeStatusSet = m.trySetNegativeStatus(b);
+
+            if (newNegativeStatusSet) {
+                c.sendMessage(String.format(
+                    "%s est brûlé !", m.getName()
+                ));
+            }
         }
     }
 }
